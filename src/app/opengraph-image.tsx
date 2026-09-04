@@ -129,17 +129,45 @@ export default async function OpengraphImage() {
             <div
               style={{
                 display: "flex",
-                alignItems: "center",
-                gap: 12,
-                marginTop: 24,
+                flexDirection: "column",
+                gap: 20,
+                marginTop: 26,
               }}
             >
-              <span
-                style={{ width: 56, height: 4, borderRadius: 2, background: "#5b0ef5" }}
-              />
-              <span style={{ fontSize: 30, color: "#e2e8f0", opacity: 0.95 }}>
-                Seven years in HR technology — two stack generations, one flagship rebuild.
-              </span>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span
+                  style={{ width: 56, height: 4, borderRadius: 2, background: "#5b0ef5" }}
+                />
+                <span style={{ fontSize: 28, color: "#e2e8f0" }}>
+                  Two stack generations. One flagship rebuild.
+                </span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    background: "#ffffff",
+                    borderRadius: 999,
+                    padding: "12px 24px",
+                    boxShadow: "0 4px 16px rgba(0,0,0,0.18)",
+                  }}
+                >
+                  <span style={{ fontSize: 24, fontWeight: 700, color: "#18244e" }}>
+                    View my work
+                  </span>
+                </div>
+                <span
+                  style={{
+                    fontSize: 21,
+                    fontWeight: 600,
+                    color: "#bfdbfe",
+                    letterSpacing: 1,
+                  }}
+                >
+                  anggakersana.dev
+                </span>
+              </div>
             </div>
           </div>
 
