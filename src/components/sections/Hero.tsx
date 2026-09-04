@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { personalInfo } from "@/data/portfolio";
 import { ArrowDown, Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon, WhatsappIcon } from "@/components/ui/social-icons";
@@ -26,14 +27,17 @@ export function Hero() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border-accent dark:border-border-dark-accent bg-brand-50/50 dark:bg-brand-950/20 text-sm text-brand-950 dark:text-brand-200 mb-8 opacity-0 animate-fade-in">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-soft" />
-            Available for opportunities
+            Open to senior full-stack & product roles
           </div>
 
           {/* Profile Photo */}
           <div className="mb-8 opacity-0 animate-fade-in-up stagger-1">
-            <img
+            <Image
               src="/profile.jpg"
               alt={personalInfo.name}
+              width={160}
+              height={160}
+              priority
               className="mx-auto w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-white dark:border-surface-dark shadow-lg shadow-brand-950/10"
             />
           </div>

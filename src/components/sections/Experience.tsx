@@ -14,7 +14,8 @@ export function Experience() {
             Where I&apos;ve worked
           </h3>
           <p className="mt-4 text-neutral-600 dark:text-text-dark-secondary max-w-xl mx-auto">
-            My professional journey building software that makes a real impact.
+            Seven years at one company across three phases — from feature contributor to
+            the person trusted with re-architecting the flagship product.
           </p>
         </div>
 

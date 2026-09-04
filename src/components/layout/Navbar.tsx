@@ -5,11 +5,12 @@ import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { personalInfo } from "@/data/portfolio";
 
-const navLinks = [
+const navLinks: { href: string; label: string; page?: boolean }[] = [
   { href: "#about", label: "About" },
   { href: "#skills", label: "Skills" },
   { href: "#projects", label: "Projects" },
   { href: "#experience", label: "Experience" },
+  { href: "/career", label: "Career", page: true },
   { href: "#contact", label: "Contact" },
 ];
 
@@ -46,12 +47,21 @@ export function Navbar() {
           <ul className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <li key={link.href}>
-                <a
-                  href={link.href}
-                  className="px-4 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:text-brand-primary dark:hover:text-white transition-colors rounded-lg hover:bg-neutral-100 dark:hover:bg-white/5"
-                >
-                  {link.label}
-                </a>
+                {link.page ? (
+                  <Link
+                    href={link.href}
+                    className="px-4 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:text-brand-primary dark:hover:text-white transition-colors rounded-lg hover:bg-neutral-100 dark:hover:bg-white/5"
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    href={link.href}
+                    className="px-4 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:text-brand-primary dark:hover:text-white transition-colors rounded-lg hover:bg-neutral-100 dark:hover:bg-white/5"
+                  >
+                    {link.label}
+                  </a>
+                )}
               </li>
             ))}
           </ul>
@@ -76,13 +86,23 @@ export function Navbar() {
         <ul className="bg-white dark:bg-surface-dark border-b border-neutral-200 dark:border-border-dark-subtle px-6 py-4 space-y-1">
           {navLinks.map((link) => (
             <li key={link.href}>
-              <a
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                className="block px-4 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:text-brand-primary dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/5 rounded-lg transition-all"
-              >
-                {link.label}
-              </a>
+              {link.page ? (
+                <Link
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  className="block px-4 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:text-brand-primary dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/5 rounded-lg transition-all"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  className="block px-4 py-2.5 text-sm text-neutral-700 dark:text-neutral-300 hover:text-brand-primary dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/5 rounded-lg transition-all"
+                >
+                  {link.label}
+                </a>
+              )}
             </li>
           ))}
         </ul>
