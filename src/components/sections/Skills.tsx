@@ -21,8 +21,8 @@ export function Skills() {
             Technologies I work with
           </h3>
           <p className="mt-4 text-neutral-600 dark:text-text-dark-secondary max-w-xl mx-auto">
-            A curated set of tools and technologies I&apos;ve used to build production-grade
-            applications — from frontend to infrastructure.
+            A verified stack from seven years of production work — led by the PHP/Laravel
+            backend and React frontend of a flagship platform, then a modern Next.js rebuild.
           </p>
         </div>
 
