@@ -79,7 +79,7 @@ export default function CareerPage() {
             The full track record
           </p>
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-brand-primary dark:text-white max-w-3xl">
-            Seven years in HR technology — spanning two complete generations of the stack.
+            Seven years in HR technology, spanning two complete generations of the stack.
           </h1>
 
           <p className="mt-6 text-lg text-neutral-600 dark:text-text-dark-secondary leading-relaxed max-w-3xl">
@@ -94,12 +94,12 @@ export default function CareerPage() {
             </a>{" "}
             from May 2019 to August 2026. Principal contributor to the flagship recruiter
             platform and the candidate assessment application, and the engineer who led the
-            ground-up rebuild on a modern stack — then wrote the product specifications that
+            ground-up rebuild on a modern stack, then wrote the product specifications that
             drove it. Now open to senior full-stack and product-engineering roles.
           </p>
 
           <p className="mt-6 text-neutral-600 dark:text-text-dark-secondary leading-relaxed max-w-3xl text-base">
-            This page is built from primary sources rather than recollection — the commit
+            This page is built from primary sources rather than recollection: the commit
             history across my Git identities, the Jira tickets cited in those commits, and
             the documentation I authored. Every number below is verifiable.
           </p>
@@ -265,7 +265,7 @@ export default function CareerPage() {
               What seven years in one vertical teaches
             </h2>
             <p className="mt-4 text-neutral-600 dark:text-text-dark-secondary max-w-xl mx-auto">
-              HR technology knowledge that transfers less visibly than a framework — and
+              HR technology knowledge that transfers less visibly than a framework, yet
               matters more.
             </p>
           </div>
@@ -306,7 +306,7 @@ export default function CareerPage() {
               {
                 icon: GitCommitHorizontal,
                 title: "Requirements traceability",
-                body: "Every commit links code to a requirement — 916 distinct Jira ticket keys cited in commit messages across 13 projects.",
+                body: "Every commit links code to a requirement: 916 distinct Jira ticket keys cited in commit messages across 13 projects.",
               },
               {
                 icon: TicketCheck,
@@ -316,22 +316,22 @@ export default function CareerPage() {
               {
                 icon: FileText,
                 title: "Spec-first, then ship",
-                body: "19 PRDs, 30 design use cases and the company-wide PRD template — work defined, then implemented, by the same person.",
+                body: "19 PRDs, 30 design use cases and the company-wide PRD template, work defined then implemented by the same person.",
               },
               {
                 icon: Layers,
                 title: "Deliberate risk-taking",
-                body: "New technology is proven in low-risk projects first — TypeScript in a scraper in 2024 carried the flagship rebuild in 2026.",
+                body: "New technology is proven in low-risk projects first: TypeScript in a scraper in 2024 carried the flagship rebuild in 2026.",
               },
               {
                 icon: Calendar,
                 title: "Never dormant",
-                body: "88 of 88 calendar months active. A flat contribution line — the difference between bursts and someone a team can plan around.",
+                body: "88 of 88 calendar months active. A flat contribution line: the difference between bursts and someone a team can plan around.",
               },
               {
                 icon: Sparkles,
                 title: "Honest documentation",
-                body: "Specs that record their own failures and design reversals — including a security gap flagged before it could reach production.",
+                body: "Specs that record their own failures and design reversals, including a security gap flagged before it could reach production.",
               },
             ].map((item) => (
               <div

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { personalInfo } from "@/data/portfolio";
+import { personalInfo, heroProof } from "@/data/portfolio";
 import { ArrowDown, Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon, WhatsappIcon } from "@/components/ui/social-icons";
 
@@ -49,34 +49,54 @@ export function Hero() {
           <p className="mt-4 text-xl sm:text-2xl md:text-3xl font-medium text-brand-accent dark:text-brand-400 opacity-0 animate-fade-in-up stagger-3">
             {personalInfo.title}
           </p>
-          <p className="mt-3 text-base sm:text-lg text-neutral-600 dark:text-text-dark-secondary max-w-xl mx-auto opacity-0 animate-fade-in-up stagger-4">
+          <p className="mt-2 text-sm sm:text-base text-neutral-500 dark:text-neutral-400 max-w-xl mx-auto opacity-0 animate-fade-in-up stagger-4">
             {personalInfo.tagline}
           </p>
 
-          {/* Description */}
-          <p className="mt-6 text-base leading-relaxed text-neutral-600 dark:text-text-dark-secondary max-w-2xl mx-auto opacity-0 animate-fade-in-up stagger-5">
+          {/* Outcome headline */}
+          <p className="mt-5 text-2xl sm:text-3xl md:text-[2rem] font-semibold leading-snug tracking-tight text-brand-primary dark:text-white max-w-3xl mx-auto opacity-0 animate-fade-in-up stagger-5">
+            {personalInfo.headline}
+          </p>
+
+          {/* Supporting line */}
+          <p className="mt-4 text-base leading-relaxed text-neutral-600 dark:text-text-dark-secondary max-w-2xl mx-auto opacity-0 animate-fade-in-up stagger-6">
             {personalInfo.description}
           </p>
 
+          {/* Proof strip */}
+          <dl className="mt-9 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-6 max-w-3xl mx-auto opacity-0 animate-fade-in-up stagger-7">
+            {heroProof.map((stat) => (
+              <div key={stat.label} className="text-center">
+                <dt className="sr-only">{stat.label}</dt>
+                <dd className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-brand-600 to-brand-accent dark:from-brand-400 dark:to-brand-accent bg-clip-text text-transparent tabular-nums">
+                  {stat.value}
+                </dd>
+                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400 leading-snug">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
+          </dl>
+
           {/* CTAs */}
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4 opacity-0 animate-fade-in-up stagger-6">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4 opacity-0 animate-fade-in-up stagger-8">
             <a
               href="#projects"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-primary dark:bg-white text-white dark:text-brand-primary font-medium text-sm hover:bg-brand-accent dark:hover:bg-brand-100 transition-all duration-200 shadow-sm hover:shadow-md"
             >
-              View My Work
+              See the work behind these numbers
               <ArrowDown size={16} />
             </a>
             <a
-              href="#contact"
+              href="#for-your-business"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 font-medium text-sm hover:bg-neutral-100 dark:hover:bg-white/5 hover:border-brand-400 transition-all duration-200"
             >
-              Get in Touch
+              What this means for your business
             </a>
           </div>
 
           {/* Social links */}
-          <div className="mt-10 flex items-center justify-center gap-3 opacity-0 animate-fade-in-up stagger-7">
+          <div className="mt-10 flex items-center justify-center gap-3 opacity-0 animate-fade-in-up stagger-9">
             {personalInfo.socials.map((social) => (
               <a
                 key={social.name}

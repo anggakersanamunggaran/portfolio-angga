@@ -169,7 +169,7 @@ export function Projects() {
             What I&apos;ve built
           </h3>
           <p className="mt-4 text-neutral-600 dark:text-text-dark-secondary max-w-xl mx-auto">
-            Production-grade platforms I&apos;ve designed, shipped, and kept running —
+            Production-grade platforms I&apos;ve designed, shipped, and kept running,
             from flagship hiring software to side projects.
           </p>
         </div>

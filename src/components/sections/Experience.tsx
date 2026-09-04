@@ -14,7 +14,7 @@ export function Experience() {
             Where I&apos;ve worked
           </h3>
           <p className="mt-4 text-neutral-600 dark:text-text-dark-secondary max-w-xl mx-auto">
-            Seven years at one company across three phases — from feature contributor to
+            Seven years at one company across three phases, from feature contributor to
             the person trusted with re-architecting the flagship product.
           </p>
         </div>
@@ -59,7 +59,7 @@ export function Experience() {
                     <div className="flex items-center gap-3 text-xs text-neutral-500 dark:text-neutral-400 shrink-0">
                       <span className="inline-flex items-center gap-1">
                         <Calendar size={12} />
-                        {exp.startDate} — {exp.endDate}
+                        {exp.startDate} to {exp.endDate}
                       </span>
                       <span className="inline-flex items-center gap-1">
                         <MapPin size={12} />
