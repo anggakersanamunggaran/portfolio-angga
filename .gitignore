@@ -40,7 +40,3 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# personal job-application notes & assets (repo is PUBLIC: never commit/push these)
-/screening-answer.md
-/public/angga-task/apply-to/
-/public/angga-task/signature-gmail-preview.html
