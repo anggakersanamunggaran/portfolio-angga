@@ -7,7 +7,7 @@
 
 ## 1. Ringkasan Repos
 
-Portfolio single-page di `/` (Hero → ForYourBusiness → About → Skills → Projects → Experience → Contact) + halaman `/career` (track record yang bisa diaudit dari commit/Jira/docs).
+Portfolio single-page di `/` (Hero → ForYourBusiness → About → Skills → Projects → Experience → Contact) + halaman `/career` (track record yang angka-angkanya bersumber dari git commit history; Jira/Confluence tidak bisa diakses lagi sejak keluar ASTRNT).
 
 - **Framework:** Next.js 16 (App Router), TypeScript
 - **Styling:** Tailwind CSS v4 (`@theme` di `globals.css`)
@@ -83,7 +83,7 @@ Komponen section-nya: `src/components/sections/*.tsx` (`ForYourBusiness.tsx` ber
 - **File personal TIDAK pernah di-commit/di-push** (repo public): `screening-answer.md` (root), `public/angga-task/apply-to/` (email, cover letter, tracker lamaran), `public/angga-task/signature-gmail-preview.html`. Sudah masuk `.gitignore` (2026-09-04).
 - **`public/CV/` ikut di-commit & di-push** (keputusan 2026-09-04) supaya CV bisa di-download live dari situs. Yang di-push hanya CV (umum + 5 varian) + log ini, bukan bahan lamaran.
 - Jangan menambahkan kembali em-dash `—` pada copy paragraf/bullet yang tampil. Tanda pisah yang dipakai: titik dua (`:`), koma, atau restrukturisasi kalimat. En-dash `–` hanya untuk rentang tahun/tanggal.
-- CV dan semua angka besar (commit, Jira, PRD) harus tetap bisa diverifikasi dari sumber primer (jangan mengarang angka).
+- Angka harus bersumber dari **git commit history yang masih ada** (Jira/Confluence tidak bisa diakses lagi sejak keluar ASTRNT, 2026). Jangan mengarang angka.
 
 ## 5. Verifikasi Lokal
 
