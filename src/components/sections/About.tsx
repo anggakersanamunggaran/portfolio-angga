@@ -11,6 +11,8 @@ import {
   Award,
   GraduationCap,
   Trophy,
+  GitBranch,
+  TicketCheck,
 } from "lucide-react";
 
 const recognition = [
@@ -181,6 +183,49 @@ export function About() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* How I run the work */}
+            <div className="p-6 rounded-2xl bg-white dark:bg-surface-dark-secondary border border-neutral-200 dark:border-border-dark-subtle">
+              <h4 className="text-sm font-semibold tracking-widest uppercase text-neutral-500 dark:text-neutral-400 mb-4">
+                How I run the work
+              </h4>
+              <ul className="space-y-4">
+                {[
+                  {
+                    icon: GitBranch,
+                    title: "GitFlow, not guesswork",
+                    detail:
+                      "Every change branches off develop and ships through release. Nothing lands straight on production.",
+                  },
+                  {
+                    icon: TicketCheck,
+                    title: "Jira for every ticket",
+                    detail:
+                      "Each piece of work is a tracked ticket, and commits link back to it, so the trail stays auditable.",
+                  },
+                  {
+                    icon: FileText,
+                    title: "Confluence as documentation",
+                    detail:
+                      "Specs and decisions live as documents, so the story runs cleanly from idea to shipped code.",
+                  },
+                ].map((item) => (
+                  <li key={item.title} className="flex items-start gap-3">
+                    <div className="p-2 rounded-lg bg-brand-50 dark:bg-brand-950/30 text-brand-accent dark:text-brand-400 shrink-0">
+                      <item.icon size={15} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-brand-primary dark:text-white">
+                        {item.title}
+                      </p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                        {item.detail}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {/* CTA to full track record */}
