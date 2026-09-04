@@ -5,7 +5,30 @@ export const alt =
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OpengraphImage() {
+const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://anggakersana-dev.vercel.app";
+
+// Muat avatar dari domain live sebagai data URI. Fallback null agar build tetap
+// sukses bila domain belum bisa dijangkau (mis. build lokal tanpa network).
+async function loadAvatar(): Promise<string | null> {
+  try {
+    const res = await fetch(`${SITE}/profile.jpg`, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) return null;
+    const bytes = new Uint8Array(await res.arrayBuffer());
+    let binary = "";
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return `data:image/jpeg;base64,${btoa(binary)}`;
+  } catch {
+    return null;
+  }
+}
+
+export default async function OpengraphImage() {
+  const avatar = await loadAvatar();
+
   return new ImageResponse(
     (
       <div
@@ -46,67 +69,94 @@ export default function OpengraphImage() {
 
         <div
           style={{
+            flex: 1,
             display: "flex",
-            flexDirection: "column",
-            padding: "0 96px",
-            maxWidth: 1000,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "0 90px",
+            position: "relative",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <span
-              style={{
-                width: 18,
-                height: 18,
-                borderRadius: "50%",
-                background: "#34d399",
-              }}
-            />
-            <span style={{ fontSize: 28, color: "#bfdbfe", letterSpacing: 6 }}>
-              PORTFOLIO
-            </span>
-          </div>
-
+          {/* Left: text */}
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              fontSize: 96,
-              fontWeight: 800,
-              color: "#ffffff",
-              lineHeight: 1.02,
-              marginTop: 28,
+              maxWidth: 720,
             }}
           >
-            <span>Angga Kersana</span>
-            <span>Munggaran</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <span
+                style={{
+                  width: 18,
+                  height: 18,
+                  borderRadius: "50%",
+                  background: "#34d399",
+                }}
+              />
+              <span style={{ fontSize: 26, color: "#bfdbfe", letterSpacing: 6 }}>
+                PORTFOLIO
+              </span>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                fontSize: 84,
+                fontWeight: 800,
+                color: "#ffffff",
+                lineHeight: 1.05,
+                marginTop: 26,
+              }}
+            >
+              <span>Angga Kersana</span>
+              <span>Munggaran</span>
+            </div>
+
+            <div
+              style={{
+                fontSize: 40,
+                fontWeight: 600,
+                color: "#e9d5ff",
+                marginTop: 22,
+              }}
+            >
+              Senior Full-Stack Engineer
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                marginTop: 24,
+              }}
+            >
+              <span
+                style={{ width: 56, height: 4, borderRadius: 2, background: "#5b0ef5" }}
+              />
+              <span style={{ fontSize: 30, color: "#e2e8f0", opacity: 0.95 }}>
+                Seven years in HR technology — two stack generations, one flagship rebuild.
+              </span>
+            </div>
           </div>
 
-          <div
-            style={{
-              fontSize: 44,
-              fontWeight: 600,
-              color: "#e9d5ff",
-              marginTop: 24,
-            }}
-          >
-            Senior Full-Stack Engineer
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              marginTop: 26,
-            }}
-          >
-            <span
-              style={{ width: 56, height: 4, borderRadius: 2, background: "#5b0ef5" }}
+          {/* Right: avatar */}
+          {avatar ? (
+            <img
+              src={avatar}
+              alt=""
+              style={{
+                width: 248,
+                height: 248,
+                borderRadius: "50%",
+                border: "10px solid rgba(255,255,255,0.9)",
+                objectFit: "cover",
+              }}
             />
-            <span style={{ fontSize: 32, color: "#e2e8f0", opacity: 0.95 }}>
-              Seven years in HR technology — two stack generations, one flagship rebuild.
-            </span>
-          </div>
+          ) : null}
         </div>
       </div>
     ),
