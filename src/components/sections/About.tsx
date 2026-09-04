@@ -38,6 +38,13 @@ export function About() {
                 the ability to operate at scale under load — is genuinely hard to hire
                 for, and it&apos;s what I bring to every project.
               </p>
+              <p>
+                Under that product work runs infrastructure ownership. When the company
+                moved its platform from AWS to Azure, I stood up the per-environment builds
+                and PM2 process management for each web app, and helped re-home what Azure
+                had no direct equivalent for — object and video storage onto Azure Blob, and
+                the DynamoDB activity log onto MongoDB.
+              </p>
             </div>
 
             {/* Two quick differentiators */}
@@ -99,7 +106,7 @@ export function About() {
                   {
                     icon: Calendar,
                     label: "Experience",
-                    value: "7+ years · 2019–present",
+                    value: "7+ years · 2019 – Aug 2026",
                   },
                   {
                     icon: Briefcase,

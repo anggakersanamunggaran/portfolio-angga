@@ -11,93 +11,139 @@ const sideProjects = projects.filter((p) => p.kind === "side");
 interface ProjectCardProps {
   project: Project;
   onOpen: (id: string) => void;
+  featured?: boolean;
 }
 
-function ProjectCard({ project, onOpen }: ProjectCardProps) {
+function ProjectCard({ project, onOpen, featured }: ProjectCardProps) {
   return (
-    <article className="group relative flex flex-col bg-white dark:bg-surface-dark-secondary rounded-2xl border border-neutral-200 dark:border-border-dark-subtle overflow-hidden hover:border-brand-200 dark:hover:border-brand-600/50 transition-all duration-300 hover:shadow-lg hover:shadow-brand-950/5 dark:hover:shadow-black/20">
+    <article
+      className={`group relative flex flex-col bg-white dark:bg-surface-dark-secondary rounded-2xl border border-neutral-200 dark:border-border-dark-subtle overflow-hidden hover:border-brand-200 dark:hover:border-brand-600/50 transition-all duration-300 hover:shadow-lg hover:shadow-brand-950/5 dark:hover:shadow-black/20 ${
+        featured ? "md:col-span-2" : ""
+      }`}
+    >
       {/* Card gradient accent */}
       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-600 to-brand-accent dark:from-brand-400 dark:to-brand-accent" />
 
-      <div className="flex flex-col flex-1 p-6 lg:p-8">
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {project.tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="px-2.5 py-1 text-xs font-medium rounded-md bg-brand-50 dark:bg-brand-950/30 text-brand-600 dark:text-brand-400"
-            >
-              {tag}
-            </span>
-          ))}
-          {project.tags.length > 3 && (
-            <span className="px-2.5 py-1 text-xs font-medium rounded-md bg-neutral-100 dark:bg-white/5 text-neutral-500 dark:text-neutral-400">
-              +{project.tags.length - 3}
-            </span>
-          )}
-        </div>
-
-        {/* Title */}
-        <h4 className="text-xl font-bold text-brand-primary dark:text-white mb-2 group-hover:text-brand-accent dark:group-hover:text-brand-400 transition-colors">
-          {project.title}
-        </h4>
-
-        {/* Description */}
-        <p className="text-sm text-neutral-600 dark:text-text-dark-secondary leading-relaxed mb-4 flex-1">
-          {project.description}
-        </p>
-
-        {/* Year */}
-        <p className="text-xs text-neutral-400 dark:text-neutral-500 mb-4">
-          {project.year}
-        </p>
-
-        {/* Actions */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => onOpen(project.id)}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-accent dark:text-brand-400 hover:text-brand-accent-hover dark:hover:text-brand-200 transition-colors"
-          >
-            View Details
-            <ChevronRight size={14} />
-          </button>
-
-          <div className="flex items-center gap-2 ml-auto">
-            {project.links?.github && (
-              <a
-                href={project.links?.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-brand-accent dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 transition-all"
-                aria-label="View on GitHub"
+      <div
+        className={`flex flex-1 ${
+          featured ? "flex-col lg:flex-row gap-8 p-6 lg:p-10" : "flex-col p-6 lg:p-8"
+        }`}
+      >
+        {/* Main column */}
+        <div className="flex flex-col flex-1">
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            {project.tags.slice(0, 3).map((tag) => (
+              <span
+                key={tag}
+                className="px-2.5 py-1 text-xs font-medium rounded-md bg-brand-50 dark:bg-brand-950/30 text-brand-600 dark:text-brand-400"
               >
-                <GithubIcon size={16} />
-              </a>
-            )}
-            {project.links?.gitlab && (
-              <a
-                href={project.links?.gitlab}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-brand-accent dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 transition-all"
-                aria-label="View on GitLab"
-              >
-                <GitlabIcon size={16} />
-              </a>
-            )}
-            {project.links?.live && (
-              <a
-                href={project.links?.live}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-brand-accent dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 transition-all"
-                aria-label="View live site"
-              >
-                <ExternalLink size={16} />
-              </a>
+                {tag}
+              </span>
+            ))}
+            {project.tags.length > 3 && (
+              <span className="px-2.5 py-1 text-xs font-medium rounded-md bg-neutral-100 dark:bg-white/5 text-neutral-500 dark:text-neutral-400">
+                +{project.tags.length - 3}
+              </span>
             )}
           </div>
+
+          {/* Title */}
+          <h4
+            className={`font-bold text-brand-primary dark:text-white mb-2 group-hover:text-brand-accent dark:group-hover:text-brand-400 transition-colors ${
+              featured ? "text-2xl lg:text-3xl" : "text-xl"
+            }`}
+          >
+            {project.title}
+          </h4>
+
+          {/* Description */}
+          <p className="text-sm text-neutral-600 dark:text-text-dark-secondary leading-relaxed mb-4 flex-1">
+            {project.description}
+          </p>
+
+          {/* Year */}
+          <p className="text-xs text-neutral-400 dark:text-neutral-500 mb-4">
+            {project.year}
+          </p>
+
+          {/* Actions */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => onOpen(project.id)}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-accent dark:text-brand-400 hover:text-brand-accent-hover dark:hover:text-brand-200 transition-colors"
+            >
+              View Details
+              <ChevronRight size={14} />
+            </button>
+
+            <div className="flex items-center gap-2 ml-auto">
+              {project.links?.github && (
+                <a
+                  href={project.links?.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-brand-accent dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 transition-all"
+                  aria-label="View on GitHub"
+                >
+                  <GithubIcon size={16} />
+                </a>
+              )}
+              {project.links?.gitlab && (
+                <a
+                  href={project.links?.gitlab}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-brand-accent dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 transition-all"
+                  aria-label="View on GitLab"
+                >
+                  <GitlabIcon size={16} />
+                </a>
+              )}
+              {project.links?.live && (
+                <a
+                  href={project.links?.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-brand-accent dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 transition-all"
+                  aria-label="View live site"
+                >
+                  <ExternalLink size={16} />
+                </a>
+              )}
+            </div>
+          </div>
         </div>
+
+        {/* Right rail — shown on the featured card */}
+        {featured && (
+          <aside className="lg:w-80 lg:shrink-0 flex flex-col lg:border-l lg:border-neutral-200 dark:lg:border-neutral-800 lg:pl-8">
+            <h5 className="text-xs font-semibold tracking-wider uppercase text-brand-accent dark:text-brand-400 mb-3">
+              Key moves
+            </h5>
+            <ul className="space-y-2.5">
+              {project.highlights.map((h, i) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-2 text-sm text-neutral-600 dark:text-text-dark-secondary"
+                >
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-brand-accent dark:bg-brand-400 shrink-0" />
+                  {h}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-auto pt-6 flex flex-wrap gap-2">
+              {project.techStack.slice(0, 6).map((t) => (
+                <span
+                  key={t.name}
+                  className="px-2.5 py-1 text-xs font-medium rounded-md bg-neutral-100 dark:bg-white/5 text-neutral-600 dark:text-neutral-300"
+                >
+                  {t.name}
+                </span>
+              ))}
+            </div>
+          </aside>
+        )}
       </div>
     </article>
   );
@@ -140,7 +186,12 @@ export function Projects() {
         </div>
         <div className="grid md:grid-cols-2 gap-6 lg:gap-8 mb-16">
           {workProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} onOpen={setSelectedProject} />
+            <ProjectCard
+              key={project.id}
+              project={project}
+              onOpen={setSelectedProject}
+              featured={project.featured}
+            />
           ))}
         </div>
 

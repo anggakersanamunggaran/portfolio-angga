@@ -4,6 +4,7 @@ import {
   careerStats,
   careerPhases,
   domainExpertise,
+  cloudMigration,
   personalInfo,
 } from "@/data/portfolio";
 import {
@@ -11,6 +12,7 @@ import {
   ArrowLeft,
   Briefcase,
   Calendar,
+  Cloud,
   FileText,
   GitCommitHorizontal,
   Layers,
@@ -90,9 +92,10 @@ export default function CareerPage() {
             >
               ASTRNT
             </a>{" "}
-            since 2019. Principal contributor to the flagship recruiter platform and the
-            candidate assessment application, and the engineer who led the ground-up rebuild
-            on a modern stack — then wrote the product specifications that drove it.
+            from May 2019 to August 2026. Principal contributor to the flagship recruiter
+            platform and the candidate assessment application, and the engineer who led the
+            ground-up rebuild on a modern stack — then wrote the product specifications that
+            drove it. Now open to senior full-stack and product-engineering roles.
           </p>
 
           <p className="mt-6 text-neutral-600 dark:text-text-dark-secondary leading-relaxed max-w-3xl text-base">
@@ -104,7 +107,7 @@ export default function CareerPage() {
           <div className="mt-8 flex flex-wrap items-center gap-3 text-sm">
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-200 dark:border-border-dark-subtle text-neutral-700 dark:text-neutral-300">
               <Calendar size={15} />
-              May 2019 → present
+              May 2019 – Aug 2026
             </span>
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-200 dark:border-border-dark-subtle text-neutral-700 dark:text-neutral-300">
               <Briefcase size={15} />
@@ -214,6 +217,40 @@ export default function CareerPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ---- Cloud chapter ---- */}
+      <section className="relative py-20">
+        <div className="mx-auto max-w-6xl px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <p className="text-sm font-semibold tracking-widest uppercase text-brand-accent dark:text-brand-400 mb-3">
+              {cloudMigration.eyebrow}
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-brand-primary dark:text-white max-w-3xl mx-auto">
+              {cloudMigration.title}
+            </h2>
+            <p className="mt-5 text-neutral-600 dark:text-text-dark-secondary max-w-2xl mx-auto leading-relaxed">
+              {cloudMigration.intro}
+            </p>
+          </div>
+
+          <ul className="space-y-4 max-w-3xl mx-auto">
+            {cloudMigration.bullets.map((bullet) => (
+              <li
+                key={bullet}
+                className="flex items-start gap-3 p-5 rounded-2xl bg-white dark:bg-surface-dark-secondary border border-neutral-200 dark:border-border-dark-subtle"
+              >
+                <Cloud
+                  size={16}
+                  className="mt-0.5 text-brand-accent dark:text-brand-400 shrink-0"
+                />
+                <span className="text-sm text-neutral-600 dark:text-text-dark-secondary leading-relaxed">
+                  {bullet}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
