@@ -64,8 +64,22 @@ How Angga runs his projects — applies beyond this repo too:
   - NOTE: this portfolio repo only has a `main` branch and is pushed to directly to trigger Vercel deploys. Confirm before applying full GitFlow here.
 - **Product management:** Jira tickets for tracking, **Confluence as documentation**. Engineering commits should be traceable to a Jira ticket key.
 
+## Repo & Branch Routing (one folder, two remotes)
+This working copy is a **single folder with two remotes**, and each branch pushes to a different one. A wrong push publishes personal job-application material to a public repo, so confirm the target before every push.
+
+| Branch | Remote | GitHub repo | Visibility | Holds |
+|---|---|---|---|---|
+| `main` | `origin` | `portfolio-angga` | **PUBLIC** | Portfolio source, `public/CV/`, public context log |
+| `apply` | `personal` | `personal-notes` | **PRIVATE** | Everything on `main`, plus application material: `public/angga-task/apply-to/`, `public/angga-task/screening-answers.md`, `screening-answer.md`, `public/angga-task/signature-gmail-preview.html` |
+
+- Upstream is already set (2026-09-15): `main` tracks `origin/main` and `apply` tracks `personal/main`, so a bare `git push` on either branch lands correctly.
+- **When the pairing is not the tracked one, push explicitly:** `git push <remote> <local-branch>:<remote-branch>`. Never let a bare `git push` guess the target.
+- **Never push `apply` to `origin`.** `origin/apply` existed until 2026-09-15 and exposed recruiter emails and applicant data on the public repo; it was deleted. Do not recreate it.
+- `personal-notes` is a **full duplicate** of this portfolio, not a subset. A portfolio change lands only on `main` until `main` is merged into `apply`. Merge `main` → `apply` after portfolio work; there is no reverse sync.
+- The personal gitignore rules (`screening-answer.md`, `public/angga-task/apply-to/`, `signature-gmail-preview.html`) exist **only on `main`**. On `apply` those files are tracked on purpose. Do not "fix" that by adding the rules to `apply`.
+
 ## Constraints & Standing Rules
-- **Never commit `screening-answer.md`** (repo root, personal notes). Keep it untracked.
+- **`screening-answer.md` (repo root) stays untracked on `main`** (gitignored, personal notes). On `apply` it is tracked on purpose, because that branch pushes to the private repo. Never let it reach `origin`.
 - **`public/CV/` IS committed and pushed** so the CV downloads live at `/CV/Angga_Kersana_Munggaran_CV_2026.pdf` (CTA label: "Check out my resume", not literal "Download CV"). Old duplicate `CV(2).pdf` was deleted.
 - **No em dashes `—` in visible paragraph/bullet copy** anywhere (homepage, `src/data/portfolio.ts`, `/career`) so text does not read as AI-written. Use colons, commas, or restructured sentences. En dashes only in year/date ranges. Metadata `<title>`/OG may keep em dashes.
 - **Career numbers must stay verifiable** from primary sources (git history, Jira, Confluence/docs). Never invent figures.
