@@ -19,7 +19,10 @@ src/
 │   ├── career/page.tsx     # Auditable full track-record page
 │   ├── blog/page.tsx       # Writing index
 │   ├── blog/[slug]/page.tsx # Post, statically generated per slug
-│   └── opengraph-image.tsx # OG card, drawn with satori
+│   ├── opengraph-image.tsx # OG card, drawn with satori
+│   ├── favicon.ico         # Tab icon (16/32/48), square crop of the portrait
+│   ├── icon.png            # 192px icon, same crop
+│   └── apple-icon.png      # 180px icon for iOS home screens
 ├── components/
 │   ├── layout/
 │   │   ├── Navbar.tsx      # Sticky nav; section links go to "/#section"
@@ -62,6 +65,7 @@ Monochrome editorial: one black, one white, hairline rules, and typography carry
 - **Fonts:** Inter via `next/font` (`--font-inter`) plus Instrument Serif italic (`--font-instrument-serif`). The theme must reference `var(--font-inter)`, **never the literal string `"Inter"`**: `@theme inline` inlines resolved values, so a literal never matches the hashed family name the loader installs, and the font silently falls back with nothing appearing broken.
 - **Shared building blocks:** `components/ui/Rule.tsx` (hairline closed by a square marker), `components/ui/SectionHeader.tsx` (eyebrow + display heading in a 12-column grid), `components/ui/cta.ts` (`ctaSolid`, `ctaOutline`, `ctaOnInk`, `ctaOnInkOutline`).
 - **The one colour exception:** the profile photo. It stays full colour on purpose. The monochrome system frames the page, not the person.
+- **Icons come from app-directory file conventions, not from a metadata block.** `favicon.ico`, `icon.png` and `apple-icon.png` sit in `src/app/`, so Next emits the `<link>` tags itself; declaring them in `metadata.icons` as well produces a duplicate set, and a stale file wins. That is exactly how the create-next-app default icon survived a full restyle: `src/app/favicon.ico` (the Vercel triangle) silently outranked `public/favicon.svg`. The icons and the OG avatar are square crops of `public/avatar.jpg`; `public/profile.jpg` is the hero portrait and has a circular frame with a lavender ring baked into the pixels, so it must not be used for icons or social cards.
 - **Accessibility the design depends on:** with no accent colour left to signal with, inline links are underlined, focus rings are 2px black (white inside `.on-ink`), `::selection` is inverted per surface, and `prefers-reduced-motion` resolves the `opacity-0` entrance elements to their finished state instead of leaving a blank page.
 - **Measure, do not eyeball.** Headless screenshots have lied about layout in this repo (the tool ignored `--window-size` and laid the page out ~886px wide while capturing 390px, which looked exactly like a mobile overflow bug). Verify layout with `getBoundingClientRect()`, `documentElement.scrollWidth` and `getComputedStyle()` from a real browser.
 

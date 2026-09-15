@@ -1,26 +1,29 @@
 import { ImageResponse } from "next/og";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 
 export const alt =
   "Angga Kersana Munggaran — Senior Full-Stack Engineer in HR technology";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://anggakersana-dev.vercel.app";
-
-// Muat avatar dari domain live sebagai data URI. Fallback null agar build tetap
-// sukses bila domain belum bisa dijangkau (mis. build lokal tanpa network).
+/*
+ * Read the avatar off disk rather than fetching it back from the live domain.
+ * The previous version fetched `${SITE}/profile.jpg`, which made the social
+ * card depend on the deployment being able to reach itself and silently
+ * dropped the avatar whenever it could not.
+ *
+ * It reads `avatar.jpg`, not `profile.jpg`: the hero portrait is a circular
+ * shot with a lavender ring baked into the file, which was the last surviving
+ * piece of the old palette anywhere near the metadata. The avatar is a square
+ * crop of the same face, matching the tab icon.
+ */
 async function loadAvatar(): Promise<string | null> {
   try {
-    const res = await fetch(`${SITE}/profile.jpg`, {
-      signal: AbortSignal.timeout(5000),
-    });
-    if (!res.ok) return null;
-    const bytes = new Uint8Array(await res.arrayBuffer());
-    let binary = "";
-    for (let i = 0; i < bytes.length; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return `data:image/jpeg;base64,${btoa(binary)}`;
+    const file = await readFile(
+      path.join(process.cwd(), "public", "avatar.jpg")
+    );
+    return `data:image/jpeg;base64,${file.toString("base64")}`;
   } catch {
     return null;
   }

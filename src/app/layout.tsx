@@ -78,12 +78,13 @@ export const metadata: Metadata = {
     title,
     description,
   },
-  icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "any" },
-    ],
-  },
+  /*
+   * Icons are not declared here on purpose. `favicon.ico`, `icon.png` and
+   * `apple-icon.png` in this directory are file conventions, so Next emits the
+   * link tags itself. Declaring them as well produced a duplicate set, and the
+   * generated one for a stale `favicon.ico` was winning, which is how the
+   * create-next-app default icon survived a full restyle unnoticed.
+   */
 };
 
 export const viewport: Viewport = {

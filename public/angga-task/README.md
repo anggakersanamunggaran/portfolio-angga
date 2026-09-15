@@ -104,6 +104,16 @@ Branch `feature/ZOG-design`, belum di-merge ke `main`. Ini **overhaul menyeluruh
 - **Verifikasi:** jangan percaya screenshot untuk urusan layout. Alat screenshot pernah mengabaikan `--window-size` sehingga halaman ter-layout ~886px tapi ter-capture 390px, dan itu terlihat persis seperti bug overflow. Ukur dengan `getBoundingClientRect()` / `documentElement.scrollWidth` / `getComputedStyle()` dari browser sungguhan.
 - Angka di hero dan `/career` tidak berubah sama sekali: restyle ini murni tampilan, `src/data/portfolio.ts` tidak disentuh.
 
+### Ikon tab, ikon iOS, dan avatar kartu sosial (2026-09-15)
+
+Sempat kelewat: ikon tab masih **segitiga Vercel** meski `public/favicon.svg` sudah dibuat. Penyebabnya `src/app/favicon.ico` (bawaan `create-next-app`, ikut ter-commit sejak awal) menang atas `public/` karena file di `app/` adalah *file convention* yang Next daftarkan sendiri. Menambah `metadata.icons` malah bikin dua set `<link rel="icon">` yang saling berebut.
+
+- Sekarang ikonnya **foto kamu**: `src/app/favicon.ico` (16/32/48, dibungkus PNG-in-ICO), `src/app/icon.png` (192), `src/app/apple-icon.png` (180). Blok `metadata.icons` di `layout.tsx` **dihapus** supaya tidak dobel.
+- **`public/avatar.jpg`** (512x512) = crop kotak pada wajah, dipakai untuk ikon tab dan avatar di kartu OG. **`public/profile.jpg` jangan dipakai untuk ikon atau kartu sosial**: di dalam file-nya sudah menempel bingkai bundar + cincin lavender, sisa palet lama yang tadinya masih ikut muncul di kartu sosial.
+- `opengraph-image.tsx` sekarang membaca `public/avatar.jpg` **dari disk**, bukan fetch ke domain sendiri seperti sebelumnya (dulu kalau fetch gagal, avatar hilang diam-diam).
+- File scaffolding bawaan Next yang tidak terpakai sudah dihapus: `public/next.svg`, `vercel.svg`, `file.svg`, `globe.svg`, `window.svg`, `favicon.svg`.
+- Kalau mau ganti crop fotonya: ubah nilai `CROP` (fraksi `left`/`top`/`size`) di skrip pembuat ikon, lalu render ulang ketiga ukuran itu.
+
 ## 4. Konvensi & Constraint Penting
 
 - **File personal TIDAK pernah di-commit/di-push** (repo public): `screening-answer.md` (root), `public/angga-task/apply-to/` (email, cover letter, tracker lamaran), `public/angga-task/signature-gmail-preview.html`. Sudah masuk `.gitignore` (2026-09-04).
