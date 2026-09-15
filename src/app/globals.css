@@ -1,74 +1,147 @@
 @import "tailwindcss";
 
-@theme inline {
-  /* Brand Colors */
-  --color-brand-50: #f0f6fe;
-  --color-brand-100: #dceafd;
-  --color-brand-200: #c1dbfc;
-  --color-brand-400: #65a5f5;
-  --color-brand-600: #2c65e4;
-  --color-brand-950: #18244e;
-  --color-brand-primary: #18244e;
-  --color-brand-accent: #5b0ef5;
-  --color-brand-accent-hover: #4a0bd4;
+/*
+ * Dark mode is deliberately disabled. The site is a single fixed theme now:
+ * a black hero over white content. Overriding the default media-based `dark:`
+ * variant to a class-based one means every legacy `dark:` twin in the
+ * components is inert, because `.dark` is never set anywhere.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
 
-  /* Neutrals */
+/*
+ * Shape and elevation are token-driven, which is easy to miss from the
+ * components. These zero out every `rounded-sm|md|lg|xl|2xl` and every
+ * `shadow-*` in the whole codebase from one place, so a component that still
+ * reads `rounded-2xl shadow-lg` renders square and flat on purpose.
+ *
+ * `rounded-full` is NOT token-driven (it compiles to `calc(infinity * 1px)`),
+ * so deliberate circles such as the rule marker and the timeline dots survive.
+ *
+ * This is a one-way door: if you actually want a soft corner or a shadow back,
+ * you have to change it here, not in the component.
+ */
+@theme {
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+
+  --shadow-xs: 0 0 #0000;
+  --shadow-sm: 0 0 #0000;
+  --shadow-md: 0 0 #0000;
+  --shadow-lg: 0 0 #0000;
+  --shadow-2xl: 0 0 #0000;
+
+  --blur-3xl: 0px;
+}
+
+@theme inline {
+  /* Monochrome ramp. One black, used for display type and rules. */
+  --color-ink: #000000;
+  /* Long-form prose only. Pure black on pure white blooms for some readers. */
+  --color-body: #1a1a1a;
+  --color-paper: #ffffff;
+  --color-rule: #e5e5e5;
+  --color-rule-invert: #262626;
+  --color-muted: #6b6b6b;
+  --color-muted-invert: #a3a3a3;
+
+  /*
+   * Brand tokens repointed to monochrome. Components reference brand-* in
+   * roughly 167 places, so keeping the names and changing only the values
+   * makes the whole site monochrome without touching a single component.
+   */
+  --color-brand-50: #f5f5f5;
+  --color-brand-100: #f0f0f0;
+  --color-brand-200: #e5e5e5;
+  --color-brand-400: #6b6b6b;
+  --color-brand-500: #6b6b6b;
+  --color-brand-600: #000000;
+  --color-brand-950: #000000;
+  --color-brand-primary: #000000;
+  --color-brand-accent: #000000;
+  --color-brand-accent-hover: #262626;
+
+  /* Neutrals. 600 and 800 were referenced by components but never defined. */
   --color-neutral-50: #fafafa;
   --color-neutral-100: #f5f5f5;
-  --color-neutral-200: #e6e6e6;
-  --color-neutral-300: #d6d6d6;
-  --color-neutral-400: #a5a5a5;
-  --color-neutral-500: #767676;
-  --color-neutral-700: #434343;
-  --color-neutral-900: #1a1a1a;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-500: #737373;
+  --color-neutral-600: #525252;
+  --color-neutral-700: #404040;
+  --color-neutral-800: #262626;
+  --color-neutral-900: #171717;
   --color-neutral-950: #000000;
 
-  /* Surface Colors */
+  /*
+   * Surfaces collapse onto paper. The dark surfaces are intentionally white
+   * too, so any `dark:` twin that somehow survives renders harmlessly.
+   */
   --color-surface: #ffffff;
-  --color-surface-secondary: #f8f9fe;
-  --color-surface-dark: #0a0a0f;
-  --color-surface-dark-secondary: #12121a;
+  --color-surface-secondary: #f5f5f5;
+  --color-surface-dark: #ffffff;
+  --color-surface-dark-secondary: #ffffff;
 
   /* Semantic */
-  --color-text-primary: #171717;
-  --color-text-secondary: #767676;
-  --color-text-dark: #ededed;
-  --color-text-dark-secondary: #a0a0a0;
-  --color-border-subtle: #e6e6e6;
-  --color-border-dark-subtle: #2a2a35;
-  --color-border-accent: #c1dbfc;
-  --color-border-dark-accent: #2c65e4;
-
-  /* Gradients */
-  --color-gradient-start: #18244e;
-  --color-gradient-end: #5b0ef5;
+  --color-text-primary: #0a0a0a;
+  --color-text-secondary: #6b6b6b;
+  --color-text-dark: #0a0a0a;
+  --color-text-dark-secondary: #6b6b6b;
+  --color-border-subtle: #e5e5e5;
+  --color-border-dark-subtle: #e5e5e5;
+  --color-border-accent: #e5e5e5;
+  --color-border-dark-accent: #e5e5e5;
 
   /* Fonts */
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
+  /*
+   * Without this, a visitor whose OS is in dark mode gets dark native
+   * scrollbars, dark form controls and a dark select popup on an otherwise
+   * pure-white page. The custom scrollbar below only covers WebKit.
+   */
+  color-scheme: light;
 }
 
+/*
+ * Respect reduced motion, and make the entrance animations fail-safe. Those
+ * elements start at `opacity-0` and rely on the animation to become visible,
+ * so a visitor who has reduced motion on (or whose animation never runs) must
+ * land on the finished state immediately rather than on invisible content.
+ */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 }
 
 /* Selection */
 ::selection {
-  background-color: var(--color-brand-200);
-  color: var(--color-brand-950);
+  background-color: #000000;
+  color: #ffffff;
 }
-@media (prefers-color-scheme: dark) {
-  ::selection {
-    background-color: var(--color-brand-600);
-    color: white;
-  }
+
+/* Inside the black hero the rule above would be invisible, so invert it. */
+.on-ink ::selection {
+  background-color: #ffffff;
+  color: #000000;
 }
 
 /* Custom scrollbar */
@@ -80,19 +153,22 @@ html {
 }
 ::-webkit-scrollbar-thumb {
   background: var(--color-neutral-300);
-  border-radius: 4px;
 }
-@media (prefers-color-scheme: dark) {
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-neutral-700);
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-400);
 }
 
-/* Focus ring */
+/*
+ * Focus ring. Monochrome and high contrast: ink on light surfaces. The hero
+ * carries `.on-ink` so focus stays visible against the black section.
+ */
 *:focus-visible {
-  outline: 2px solid var(--color-brand-400);
+  outline: 2px solid var(--color-ink);
   outline-offset: 2px;
-  border-radius: 2px;
+}
+.on-ink *:focus-visible,
+.on-ink:focus-visible {
+  outline-color: #ffffff;
 }
 
 /* Animations */
@@ -110,53 +186,11 @@ html {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-@keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-@keyframes pulse-soft {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
-}
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-@keyframes slide-in-right {
-  from { opacity: 0; transform: translateX(30px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
 @utility animate-fade-in-up {
   animation: fade-in-up 0.6s ease-out forwards;
 }
 @utility animate-fade-in {
   animation: fade-in 0.5s ease-out forwards;
-}
-@utility animate-scale-in {
-  animation: scale-in 0.4s ease-out forwards;
-}
-@utility animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-@utility animate-pulse-soft {
-  animation: pulse-soft 3s ease-in-out infinite;
-}
-@utility animate-shimmer {
-  animation: shimmer 2s infinite;
-}
-@utility animate-slide-in-right {
-  animation: slide-in-right 0.5s ease-out forwards;
 }
 
 /* Stagger for child animations */
@@ -166,3 +200,62 @@ html {
 @utility stagger-4 { animation-delay: 0.4s; }
 @utility stagger-5 { animation-delay: 0.5s; }
 @utility stagger-6 { animation-delay: 0.6s; }
+@utility stagger-7 { animation-delay: 0.7s; }
+@utility stagger-8 { animation-delay: 0.8s; }
+@utility stagger-9 { animation-delay: 0.9s; }
+
+/*
+ * Micro label: the small uppercase, wide-tracked type ZOG uses for eyebrows,
+ * nav links, and captions. One utility so the whole site stays consistent.
+ */
+@utility label-micro {
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 500;
+}
+
+/*
+ * Display scale. vw-clamped so nothing overflows at 390px.
+ *
+ * The max is deliberately below what ZOG uses on a wide screen. Their
+ * headlines run three or four words; this one is a full sentence, so the same
+ * size would push the hero well past one viewport and break the bottom-anchored
+ * composition. The cap is what keeps the whole hero on one screen.
+ */
+@utility display-xl {
+  font-size: clamp(2.25rem, 7vw, 5.75rem);
+  line-height: 0.88;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+@utility display-l {
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+@utility display-m {
+  font-size: clamp(1.375rem, 2.6vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+/*
+ * The serif accent. `text-transform: none` matters: headlines are uppercase,
+ * and inheriting that would render an uppercase italic serif, losing the
+ * lower-case high-contrast tension the accent exists for.
+ */
+@utility accent-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}

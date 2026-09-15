@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { personalInfo, heroProof } from "@/data/portfolio";
-import { ArrowDown, Mail } from "lucide-react";
+import { sortedPosts } from "@/data/posts";
+import { ArrowDown, ArrowRight, Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon, WhatsappIcon } from "@/components/ui/social-icons";
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -12,116 +14,164 @@ const iconMap: Record<string, React.ReactNode> = {
   whatsapp: <WhatsappIcon size={18} />,
 };
 
+/*
+ * The hero headline is one sentence. It is split at its first comma so the
+ * opening clause can carry the heavy uppercase display type and the closing
+ * clause can drop into the serif italic, which is the emphasis device the
+ * whole design leans on. If the headline ever loses its comma, the first part
+ * simply takes the whole line and the italic line is skipped.
+ */
+function splitHeadline(headline: string): [string, string] {
+  const comma = headline.indexOf(",");
+  if (comma === -1) return [headline, ""];
+  return [headline.slice(0, comma + 1), headline.slice(comma + 1).trim()];
+}
+
 export function Hero() {
+  const [headlineLead, headlineTail] = splitHeadline(personalInfo.headline);
+  const latestPost = sortedPosts()[0];
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-brand-50/50 via-white to-white dark:from-brand-950/20 dark:via-surface-dark dark:to-surface-dark" />
+    <section
+      data-hero
+      className="on-ink relative flex min-h-screen flex-col justify-end overflow-hidden bg-black pt-20 text-white"
+    >
+      <div className="mx-auto w-full max-w-[1400px] px-6 pb-8 lg:px-8">
+        {/* Availability */}
+        <div className="mb-6 flex items-center gap-3 opacity-0 animate-fade-in">
+          <span className="h-1.5 w-1.5 rounded-full bg-white" />
+          <span className="label-micro text-white/60">
+            Open to senior full-stack and product roles
+          </span>
+        </div>
 
-      {/* Decorative blobs */}
-      <div className="absolute top-1/4 -left-1/4 w-[500px] h-[500px] rounded-full bg-brand-100/30 dark:bg-brand-600/5 blur-3xl" />
-      <div className="absolute bottom-1/4 -right-1/4 w-[400px] h-[400px] rounded-full bg-brand-accent/5 dark:bg-brand-accent/5 blur-3xl" />
+        {/* Display headline */}
+        <p className="label-micro mb-4 text-white/45 opacity-0 animate-fade-in-up stagger-1">
+          {personalInfo.name}
+        </p>
+        <h1 className="display-xl opacity-0 animate-fade-in-up stagger-2">
+          {headlineLead}
+          {headlineTail && (
+            /*
+             * 0.7em is tuned so the closing clause lands on a single line at
+             * desktop width. At the full display size it wraps to two, and the
+             * orphaned second line costs a whole display line of hero height.
+             */
+            <span className="accent-serif mt-1 block text-[0.7em] leading-[1.05]">
+              {headlineTail}
+            </span>
+          )}
+        </h1>
 
-      <div className="relative mx-auto max-w-6xl px-6 lg:px-8 py-32">
-        <div className="max-w-3xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border-accent dark:border-border-dark-accent bg-brand-50/50 dark:bg-brand-950/20 text-sm text-brand-950 dark:text-brand-200 mb-8 opacity-0 animate-fade-in">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-soft" />
-            Open to senior full-stack & product roles
+        {/*
+          * Proof strip. Two columns on mobile, one row from `sm` up. The
+          * vertical rules only appear once the items actually sit side by side:
+          * when they wrap, a left rule and a 2rem indent just look like a
+          * misaligned list.
+          */}
+        <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-white/20 pt-6 opacity-0 animate-fade-in-up stagger-5 sm:flex sm:flex-wrap sm:items-stretch sm:gap-x-0">
+          {heroProof.map((stat, i) => (
+            <div
+              key={stat.label}
+              className={
+                i > 0
+                  ? "sm:border-l sm:border-white/20 sm:pl-8 sm:pr-8"
+                  : "sm:pr-8"
+              }
+            >
+              <dd className="text-2xl font-bold tabular-nums tracking-tight sm:text-3xl">
+                {stat.value}
+              </dd>
+              <dt className="label-micro mt-1 max-w-[13rem] text-white/45">
+                {stat.label}
+              </dt>
+            </div>
+          ))}
+        </dl>
+
+        {/* Description, photo, actions */}
+        <div className="mt-6 flex flex-col gap-10 sm:flex-row sm:items-end sm:justify-between">
+          <div className="max-w-lg opacity-0 animate-fade-in-up stagger-6">
+            <p className="text-sm leading-relaxed text-white/70">
+              {personalInfo.description}
+            </p>
+            <p className="label-micro mt-4 text-white/45">{personalInfo.tagline}</p>
           </div>
 
-          {/* Profile Photo */}
-          <div className="mb-8 opacity-0 animate-fade-in-up stagger-1">
+          <div className="flex shrink-0 flex-col gap-6 opacity-0 animate-fade-in-up stagger-7 sm:items-end">
+            {/* Deliberately the one full-colour element on the page: the
+                monochrome system is the frame, not the person in it. */}
             <Image
               src="/profile.jpg"
               alt={personalInfo.name}
               width={160}
               height={160}
               priority
-              className="mx-auto w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-white dark:border-surface-dark shadow-lg shadow-brand-950/10"
+              className="h-24 w-24 object-cover"
             />
+            <div className="flex items-center gap-2">
+              {personalInfo.socials.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.url}
+                  // mailto: is not an external page; opening it in a new tab
+                  // leaves a blank window behind.
+                  target={social.url.startsWith("http") ? "_blank" : undefined}
+                  rel={
+                    social.url.startsWith("http") ? "noopener noreferrer" : undefined
+                  }
+                  aria-label={social.name}
+                  className="flex h-10 w-10 items-center justify-center border border-white/25 text-white/70 transition-colors hover:border-white hover:text-white"
+                >
+                  {iconMap[social.icon]}
+                </a>
+              ))}
+            </div>
           </div>
+        </div>
 
-          {/* Name & Title */}
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-brand-primary dark:text-white opacity-0 animate-fade-in-up stagger-2">
-            {personalInfo.name}
-          </h1>
-          <p className="mt-4 text-xl sm:text-2xl md:text-3xl font-medium text-brand-accent dark:text-brand-400 opacity-0 animate-fade-in-up stagger-3">
-            {personalInfo.title}
-          </p>
-          <p className="mt-2 text-sm sm:text-base text-neutral-500 dark:text-neutral-400 max-w-xl mx-auto opacity-0 animate-fade-in-up stagger-4">
-            {personalInfo.tagline}
-          </p>
-
-          {/* Outcome headline */}
-          <p className="mt-5 text-2xl sm:text-3xl md:text-[2rem] font-semibold leading-snug tracking-tight text-brand-primary dark:text-white max-w-3xl mx-auto opacity-0 animate-fade-in-up stagger-5">
-            {personalInfo.headline}
-          </p>
-
-          {/* Supporting line */}
-          <p className="mt-4 text-base leading-relaxed text-neutral-600 dark:text-text-dark-secondary max-w-2xl mx-auto opacity-0 animate-fade-in-up stagger-6">
-            {personalInfo.description}
-          </p>
-
-          {/* Proof strip */}
-          <dl className="mt-9 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-6 max-w-3xl mx-auto opacity-0 animate-fade-in-up stagger-7">
-            {heroProof.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <dt className="sr-only">{stat.label}</dt>
-                <dd className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-brand-600 to-brand-accent dark:from-brand-400 dark:to-brand-accent bg-clip-text text-transparent tabular-nums">
-                  {stat.value}
-                </dd>
-                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400 leading-snug">
-                  {stat.label}
-                </p>
-              </div>
-            ))}
-          </dl>
-
-          {/* CTAs */}
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4 opacity-0 animate-fade-in-up stagger-8">
-            <a
-              href="#projects"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-primary dark:bg-white text-white dark:text-brand-primary font-medium text-sm hover:bg-brand-accent dark:hover:bg-brand-100 transition-all duration-200 shadow-sm hover:shadow-md"
-            >
-              See the work behind these numbers
-              <ArrowDown size={16} />
-            </a>
-            <a
-              href="#for-your-business"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 font-medium text-sm hover:bg-neutral-100 dark:hover:bg-white/5 hover:border-brand-400 transition-all duration-200"
-            >
-              What this means for your business
-            </a>
-          </div>
-
-          {/* Social links */}
-          <div className="mt-10 flex items-center justify-center gap-3 opacity-0 animate-fade-in-up stagger-9">
-            {personalInfo.socials.map((social) => (
-              <a
-                key={social.name}
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-xl text-neutral-500 dark:text-text-dark-secondary hover:text-brand-accent dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 transition-all"
-                aria-label={social.name}
-              >
-                {iconMap[social.icon]}
-              </a>
-            ))}
-          </div>
+        {/* Actions */}
+        <div className="mt-6 flex flex-wrap items-center gap-3 opacity-0 animate-fade-in-up stagger-8">
+          <a
+            href="#projects"
+            className="inline-flex items-center gap-2 bg-white px-6 py-3 text-sm font-medium text-black transition-colors hover:bg-white/85"
+          >
+            See the work behind these numbers
+            <ArrowDown size={16} />
+          </a>
+          <a
+            href="#for-your-business"
+            className="inline-flex items-center gap-2 border border-white/30 px-6 py-3 text-sm font-medium text-white transition-colors hover:border-white hover:bg-white/10"
+          >
+            What this means for your business
+          </a>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-0 animate-fade-in-up">
-        <div className="flex flex-col items-center gap-2 text-neutral-400 dark:text-neutral-600">
-          <span className="text-xs font-medium tracking-widest uppercase">Scroll</span>
-          <div className="w-5 h-8 rounded-full border-2 border-neutral-300 dark:border-neutral-700 flex justify-center pt-1.5">
-            <div className="w-1 h-2 rounded-full bg-neutral-400 dark:bg-neutral-600 animate-bounce" />
-          </div>
+      {/*
+        Latest writing. This replaced a decorative "Scroll" cue: it occupies the
+        same slot at the foot of the hero, and points at something real instead
+        of at the act of scrolling.
+      */}
+      {latestPost && (
+        <div className="mx-auto w-full max-w-[1400px] px-6 pb-6 lg:px-8">
+          <Link
+            href={`/blog/${latestPost.slug}`}
+            className="group flex flex-col gap-2 border-t border-white/20 pt-5 sm:flex-row sm:items-baseline sm:justify-between"
+          >
+            <span className="label-micro text-white/45">Latest writing</span>
+            <span className="flex items-baseline gap-3 text-sm text-white">
+              {latestPost.title}{" "}
+              <em className="accent-serif text-base">{latestPost.accent}</em>
+              <ArrowRight
+                size={15}
+                className="translate-y-0.5 transition-transform group-hover:translate-x-1"
+                aria-hidden="true"
+              />
+            </span>
+          </Link>
         </div>
-      </div>
+      )}
     </section>
   );
 }

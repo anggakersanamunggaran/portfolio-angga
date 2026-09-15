@@ -14,15 +14,24 @@ This is a modern portfolio website built with Next.js 16 (App Router) and Tailwi
 src/
 ├── app/                    # App Router pages
 │   ├── globals.css         # Global styles + Tailwind v4 theme tokens
-│   ├── layout.tsx          # Root layout (Navbar, Footer, metadata)
+│   ├── layout.tsx          # Root layout (Navbar, Footer, fonts, metadata)
 │   ├── page.tsx            # Homepage (all sections)
-│   └── career/page.tsx     # Auditable full track-record page
+│   ├── career/page.tsx     # Auditable full track-record page
+│   ├── blog/page.tsx       # Writing index
+│   ├── blog/[slug]/page.tsx # Post, statically generated per slug
+│   └── opengraph-image.tsx # OG card, drawn with satori
 ├── components/
 │   ├── layout/
 │   │   ├── Navbar.tsx      # Sticky nav; section links go to "/#section"
 │   │   └── Footer.tsx      # Footer with social links
+│   ├── ui/                 # Shared design primitives
+│   │   ├── Rule.tsx            # Hairline rule closed by a square marker
+│   │   ├── SectionHeader.tsx   # Eyebrow + display heading, 12-column grid
+│   │   └── cta.ts              # ctaSolid / ctaOutline / ctaOnInk / ctaOnInkOutline
+│   ├── blog/
+│   │   └── PostBody.tsx    # Renders post blocks; the only article typography
 │   └── sections/
-│       ├── Hero.tsx            # Hero: headline + proof strip + CTAs
+│       ├── Hero.tsx            # Hero: headline + proof strip + CTAs + latest post
 │       ├── ForYourBusiness.tsx # "What I can do for your business" section
 │       ├── About.tsx           # About + quick facts + recognition band
 │       ├── Skills.tsx          # Skill chips with check icons (no progress bars)
@@ -30,7 +39,8 @@ src/
 │       ├── Experience.tsx      # Work experience timeline
 │       └── Contact.tsx         # Contact cards + email CTA
 ├── data/
-│   └── portfolio.ts        # ALL site content (personalInfo, heroProof, skills, projects, experiences, career data)
+│   ├── portfolio.ts        # ALL site content (personalInfo, heroProof, skills, projects, experiences, career data)
+│   └── posts.ts            # Blog posts, stored as typed blocks
 └── lib/
     └── utils.ts            # Utility functions
 ```
@@ -43,10 +53,17 @@ npm run start      # Start production server
 ```
 
 ## Design System
-- Uses custom theme tokens in `globals.css` via `@theme inline`
-- Brand colors: `brand-*` tokens (navy-based with purple accent)
-- Dark mode: automatic via `prefers-color-scheme`
-- Animation utilities: `animate-fade-in-up`, `animate-scale-in`, etc.
+Monochrome editorial: one black, one white, hairline rules, and typography carrying the whole design. Inspired by the Zero One Group site, but with Angga's own identity. Their "0——1" mark is deliberately **not** imitated.
+
+- **Single fixed theme, no dark mode.** `@custom-variant dark (&:where(.dark, .dark *))` makes every `dark:` class inert, because `.dark` is never set anywhere. Do not reintroduce a media-based dark variant: an explicitly black hero cannot coexist with a theme that resolves surfaces to white.
+- **Colour is token-driven.** `--color-ink`, `--color-paper`, `--color-rule`, `--color-rule-invert`, `--color-muted`, `--color-muted-invert`. The legacy `brand-*` and `surface-*` names still exist but are repointed to greys. **Change the tokens, not the components.**
+- **Shape and elevation are token-driven too.** `@theme { --radius-*: 0px; --shadow-*: 0 0 #0000 }` squares off every corner and kills every shadow site-wide. Note that `rounded-full` is **not** token-driven (it compiles to `calc(infinity * 1px)`), so deliberate circles survive, and a stray pill-shaped element will quietly outlive a restyle.
+- **Utilities:** `label-micro` (11px uppercase, 0.2em tracking) for eyebrows, nav links and captions; `display-xl` / `display-l` / `display-m` for headings; `accent-serif` for the Instrument Serif italic emphasis words inside a sans headline. `stagger-1`..`stagger-9` delay the entrance animations.
+- **Fonts:** Inter via `next/font` (`--font-inter`) plus Instrument Serif italic (`--font-instrument-serif`). The theme must reference `var(--font-inter)`, **never the literal string `"Inter"`**: `@theme inline` inlines resolved values, so a literal never matches the hashed family name the loader installs, and the font silently falls back with nothing appearing broken.
+- **Shared building blocks:** `components/ui/Rule.tsx` (hairline closed by a square marker), `components/ui/SectionHeader.tsx` (eyebrow + display heading in a 12-column grid), `components/ui/cta.ts` (`ctaSolid`, `ctaOutline`, `ctaOnInk`, `ctaOnInkOutline`).
+- **The one colour exception:** the profile photo. It stays full colour on purpose. The monochrome system frames the page, not the person.
+- **Accessibility the design depends on:** with no accent colour left to signal with, inline links are underlined, focus rings are 2px black (white inside `.on-ink`), `::selection` is inverted per surface, and `prefers-reduced-motion` resolves the `opacity-0` entrance elements to their finished state instead of leaving a blank page.
+- **Measure, do not eyeball.** Headless screenshots have lied about layout in this repo (the tool ignored `--window-size` and laid the page out ~886px wide while capturing 390px, which looked exactly like a mobile overflow bug). Verify layout with `getBoundingClientRect()`, `documentElement.scrollWidth` and `getComputedStyle()` from a real browser.
 
 ## Updating Content
 All portfolio content lives in `src/data/portfolio.ts`:
@@ -56,6 +73,13 @@ All portfolio content lives in `src/data/portfolio.ts`:
 - Edit `skills` array for technology skills (rendered as chips)
 - Edit `projects` array for project showcase entries (title, description, longDescription, highlights)
 - Edit `experiences` array for work history
+
+All blog content lives in `src/data/posts.ts`, as typed blocks rather than markdown (no markdown dependency, and the renderer owns every typographic detail):
+- Append a post to `posts`; the `slug` becomes `/blog/<slug>` and it is statically generated automatically
+- `title` is the heading lead (heavy uppercase display face), `accent` is the heading tail (serif italic). Keep the accent to a few words
+- Blocks are `p`, `h2`, `ul` (items), `code` (code + optional caption), and `compare` (before/after image pair + optional caption)
+- A pair of backticks inside `p`/`ul` text renders as an inline code chip, so the stored text stays readable as plain source
+- Screenshots for a `compare` block live in `public/blog/`
 A richer "where to edit what" table lives in `public/angga-task/README.md`.
 
 ## Working Conventions (Angga)
@@ -89,3 +113,7 @@ This working copy is a **single folder with two remotes**, and each branch pushe
 ## Pages
 - `/` — Single-page site with all sections (Hero → ForYourBusiness → About → Skills → Projects → Experience → Contact)
 - `/career` — Full auditable track record (stats, three career acts, cloud chapter, domain expertise, engineering practice)
+- `/blog` — Writing index, one row per post on a date rail
+- `/blog/<slug>` — A single post, statically generated from `generateStaticParams`
+
+Only the homepage opens on a black hero. The navbar decides its colours by measuring `[data-hero]`, so a new page does **not** need its own dark hero to look right, and a page that adds one will also need the navbar's `overHero` condition widened past `pathname === "/"`.

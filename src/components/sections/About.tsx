@@ -14,6 +14,8 @@ import {
   GitBranch,
   TicketCheck,
 } from "lucide-react";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { ctaSolid } from "@/components/ui/cta";
 
 const recognition = [
   {
@@ -33,23 +35,68 @@ const recognition = [
   },
 ];
 
+const quickFacts = [
+  { icon: Briefcase, label: "Role", value: personalInfo.title },
+  { icon: MapPin, label: "Location", value: personalInfo.location },
+  { icon: Calendar, label: "Experience", value: "7+ years · May 2019 to Aug 2026" },
+  { icon: Briefcase, label: "Domain", value: "HR Technology · B2B SaaS" },
+];
+
+const howIWork = [
+  {
+    icon: GitBranch,
+    title: "GitFlow, not guesswork",
+    detail:
+      "Every change branches off develop and ships through release. Nothing lands straight on production.",
+  },
+  {
+    icon: TicketCheck,
+    title: "Jira for every ticket",
+    detail:
+      "Each piece of work is a tracked ticket, and commits link back to it, so the trail stays auditable.",
+  },
+  {
+    icon: FileText,
+    title: "Confluence as documentation",
+    detail:
+      "Specs and decisions live as documents, so the story runs cleanly from idea to shipped code.",
+  },
+];
+
+/** A hairline panel with a micro-label heading. Repeats three times. */
+function Panel({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="border-b border-rule p-6 last:border-b-0">
+      <h3 className="label-micro text-muted">{title}</h3>
+      <div className="mt-5">{children}</div>
+    </div>
+  );
+}
+
 export function About() {
   return (
-    <section id="about" className="relative py-24 sm:py-32">
-      {/* Background */}
-      <div className="absolute inset-0 bg-surface-secondary/50 dark:bg-surface-dark-secondary/50" />
+    <section id="about" className="py-20 sm:py-28">
+      <div className="mx-auto max-w-[1400px] px-6 lg:px-8">
+        <SectionHeader
+          eyebrow="About me"
+          title={
+            <>
+              Seven years in one vertical, with the products to{" "}
+              <em className="accent-serif whitespace-nowrap">prove it</em>
+            </>
+          }
+        />
 
-      <div className="relative mx-auto max-w-6xl px-6 lg:px-8">
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-start">
-          {/* Left: About text */}
-          <div>
-            <h2 className="text-sm font-semibold tracking-widest uppercase text-brand-accent dark:text-brand-400 mb-3">
-              About Me
-            </h2>
-            <h3 className="text-3xl sm:text-4xl font-bold text-brand-primary dark:text-white mb-6">
-              Seven years in one vertical, with the products to prove it.
-            </h3>
-            <div className="space-y-4 text-neutral-600 dark:text-text-dark-secondary leading-relaxed">
+        <div className="mt-14 grid gap-12 lg:grid-cols-12 lg:gap-16">
+          {/* Prose */}
+          <div className="lg:col-span-7">
+            <div className="space-y-5 text-sm leading-relaxed text-body">
               <p>
                 I&apos;m a senior full-stack engineer who has spent my whole career
                 inside HR technology at ASTRNT, across two complete generations of the
@@ -77,28 +124,24 @@ export function About() {
               </p>
             </div>
 
-            {/* Two quick differentiators */}
-            <div className="mt-8 grid sm:grid-cols-2 gap-4">
-              <div className="p-5 rounded-2xl bg-white dark:bg-surface-dark-secondary border border-neutral-200 dark:border-border-dark-subtle">
-                <div className="p-2.5 rounded-lg bg-brand-50 dark:bg-brand-950/30 text-brand-accent dark:text-brand-400 w-fit mb-3">
-                  <Layers size={18} />
-                </div>
-                <h4 className="text-sm font-bold text-brand-primary dark:text-white mb-1">
+            {/* Two differentiators */}
+            <div className="mt-12 grid border-t border-l border-rule sm:grid-cols-2">
+              <div className="border-b border-r border-rule p-6">
+                <Layers size={20} strokeWidth={1.5} className="text-ink" aria-hidden="true" />
+                <h4 className="mt-5 text-sm font-bold text-ink">
                   Two stack generations
                 </h4>
-                <p className="text-xs text-neutral-600 dark:text-text-dark-secondary leading-relaxed">
+                <p className="mt-2 text-xs leading-relaxed text-muted">
                   Maintained a legacy Laravel and React platform for seven years, then
                   rebuilt its successor without freezing the original.
                 </p>
               </div>
-              <div className="p-5 rounded-2xl bg-white dark:bg-surface-dark-secondary border border-neutral-200 dark:border-border-dark-subtle">
-                <div className="p-2.5 rounded-lg bg-brand-50 dark:bg-brand-950/30 text-brand-accent dark:text-brand-400 w-fit mb-3">
-                  <FileText size={18} />
-                </div>
-                <h4 className="text-sm font-bold text-brand-primary dark:text-white mb-1">
+              <div className="border-b border-r border-rule p-6">
+                <FileText size={20} strokeWidth={1.5} className="text-ink" aria-hidden="true" />
+                <h4 className="mt-5 text-sm font-bold text-ink">
                   Specifies, then ships
                 </h4>
-                <p className="text-xs text-neutral-600 dark:text-text-dark-secondary leading-relaxed">
+                <p className="mt-2 text-xs leading-relaxed text-muted">
                   Authored the product-specification layer for a platform rebuild, and
                   then implemented it.
                 </p>
@@ -106,120 +149,23 @@ export function About() {
             </div>
 
             {/* Recognition */}
-            <div className="mt-8 rounded-2xl bg-white dark:bg-surface-dark-secondary border border-neutral-200 dark:border-border-dark-subtle p-5">
-              <h4 className="text-sm font-semibold tracking-widest uppercase text-neutral-500 dark:text-neutral-400 mb-4">
-                Recognition
-              </h4>
-              <ul className="space-y-3">
-                {recognition.map((item) => (
-                  <li key={item.title} className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-brand-50 dark:bg-brand-950/30 text-brand-accent dark:text-brand-400 shrink-0">
-                      <item.icon size={15} />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-brand-primary dark:text-white">
-                        {item.title}
-                      </p>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                        {item.detail}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Right: Photo + Quick facts */}
-          <div className="space-y-6">
-            {/* Photo card */}
-            <div className="p-6 rounded-2xl bg-white dark:bg-surface-dark-secondary border border-neutral-200 dark:border-border-dark-subtle text-center">
-              <Image
-                src="/profile.jpg"
-                alt={personalInfo.name}
-                width={144}
-                height={144}
-                className="mx-auto w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover border-4 border-white dark:border-surface-dark shadow-md shadow-brand-950/10 mb-4"
-              />
-              <h4 className="text-lg font-bold text-brand-primary dark:text-white">
-                {personalInfo.name}
-              </h4>
-              <p className="text-sm text-brand-accent dark:text-brand-400">
-                {personalInfo.title}
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-white dark:bg-surface-dark-secondary border border-neutral-200 dark:border-border-dark-subtle">
-              <h4 className="text-sm font-semibold tracking-widest uppercase text-neutral-500 dark:text-neutral-400 mb-4">
-                Quick Facts
-              </h4>
-              <div className="space-y-4">
-                {[
-                  { icon: Briefcase, label: "Role", value: personalInfo.title },
-                  { icon: MapPin, label: "Location", value: personalInfo.location },
-                  {
-                    icon: Calendar,
-                    label: "Experience",
-                    value: "7+ years · May 2019 to Aug 2026",
-                  },
-                  {
-                    icon: Briefcase,
-                    label: "Domain",
-                    value: "HR Technology · B2B SaaS",
-                  },
-                ].map((item) => (
-                  <div key={item.label} className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-brand-50 dark:bg-brand-950/30 text-brand-accent dark:text-brand-400">
-                      <item.icon size={16} />
-                    </div>
-                    <div>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                        {item.label}
-                      </p>
-                      <p className="text-sm font-medium text-brand-primary dark:text-white">
-                        {item.value}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+            <div className="mt-12">
+              <div className="flex items-center gap-4">
+                <h3 className="label-micro text-muted">Recognition</h3>
+                <span className="h-px flex-1 bg-rule" />
               </div>
-            </div>
-
-            {/* How I run the work */}
-            <div className="p-6 rounded-2xl bg-white dark:bg-surface-dark-secondary border border-neutral-200 dark:border-border-dark-subtle">
-              <h4 className="text-sm font-semibold tracking-widest uppercase text-neutral-500 dark:text-neutral-400 mb-4">
-                How I run the work
-              </h4>
-              <ul className="space-y-4">
-                {[
-                  {
-                    icon: GitBranch,
-                    title: "GitFlow, not guesswork",
-                    detail:
-                      "Every change branches off develop and ships through release. Nothing lands straight on production.",
-                  },
-                  {
-                    icon: TicketCheck,
-                    title: "Jira for every ticket",
-                    detail:
-                      "Each piece of work is a tracked ticket, and commits link back to it, so the trail stays auditable.",
-                  },
-                  {
-                    icon: FileText,
-                    title: "Confluence as documentation",
-                    detail:
-                      "Specs and decisions live as documents, so the story runs cleanly from idea to shipped code.",
-                  },
-                ].map((item) => (
-                  <li key={item.title} className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-brand-50 dark:bg-brand-950/30 text-brand-accent dark:text-brand-400 shrink-0">
-                      <item.icon size={15} />
-                    </div>
+              <ul className="mt-6 divide-y divide-rule border-t border-rule">
+                {recognition.map((item) => (
+                  <li key={item.title} className="flex items-start gap-4 py-5">
+                    <item.icon
+                      size={18}
+                      strokeWidth={1.5}
+                      className="mt-0.5 shrink-0 text-ink"
+                      aria-hidden="true"
+                    />
                     <div>
-                      <p className="text-sm font-semibold text-brand-primary dark:text-white">
-                        {item.title}
-                      </p>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                      <p className="text-sm font-semibold text-ink">{item.title}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted">
                         {item.detail}
                       </p>
                     </div>
@@ -227,23 +173,86 @@ export function About() {
                 ))}
               </ul>
             </div>
-
-            {/* CTA to full track record */}
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-brand-50 to-brand-100/50 dark:from-brand-950/20 dark:to-brand-950/10 border border-border-accent dark:border-border-dark-accent">
-              <p className="text-sm text-brand-950 dark:text-brand-200 leading-relaxed mb-4">
-                My career is auditable: 11,697 commits, 1,661 Jira tickets held and 49
-                product specs written, all reconstructed from primary sources rather than
-                recollection. The full story lives on its own page.
-              </p>
-              <Link
-                href="/career"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-primary dark:bg-white text-white dark:text-brand-primary text-sm font-medium hover:bg-brand-accent dark:hover:bg-brand-100 transition-all"
-              >
-                Explore my full track record
-                <ArrowRight size={15} />
-              </Link>
-            </div>
           </div>
+
+          {/* Sidebar */}
+          <aside className="lg:col-span-5">
+            <div className="border border-rule">
+              {/* Portrait. Square, no ring, no shadow, and in colour: the
+                  monochrome system frames the page, not the person. */}
+              <div className="border-b border-rule p-6">
+                <Image
+                  src="/profile.jpg"
+                  alt={personalInfo.name}
+                  width={144}
+                  height={144}
+                  className="h-32 w-32 object-cover"
+                />
+                <h3 className="mt-5 text-lg font-bold text-ink">
+                  {personalInfo.name}
+                </h3>
+                <p className="label-micro mt-1 text-muted">{personalInfo.title}</p>
+              </div>
+
+              <Panel title="Quick facts">
+                <dl className="divide-y divide-rule">
+                  {quickFacts.map((item) => (
+                    <div
+                      key={item.label}
+                      className="flex items-center gap-4 py-3 first:pt-0 last:pb-0"
+                    >
+                      <item.icon
+                        size={16}
+                        strokeWidth={1.5}
+                        className="shrink-0 text-ink"
+                        aria-hidden="true"
+                      />
+                      <dt className="label-micro w-24 shrink-0 text-muted">
+                        {item.label}
+                      </dt>
+                      <dd className="text-sm font-medium text-ink">{item.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </Panel>
+
+              <Panel title="How I run the work">
+                <ul className="divide-y divide-rule">
+                  {howIWork.map((item) => (
+                    <li
+                      key={item.title}
+                      className="flex items-start gap-4 py-4 first:pt-0 last:pb-0"
+                    >
+                      <item.icon
+                        size={16}
+                        strokeWidth={1.5}
+                        className="mt-0.5 shrink-0 text-ink"
+                        aria-hidden="true"
+                      />
+                      <div>
+                        <p className="text-sm font-semibold text-ink">{item.title}</p>
+                        <p className="mt-1 text-xs leading-relaxed text-muted">
+                          {item.detail}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </Panel>
+
+              <Panel title="Auditable record">
+                <p className="text-sm leading-relaxed text-body">
+                  My career is auditable: 11,697 commits, 1,661 Jira tickets held and 49
+                  product specs written, all reconstructed from primary sources rather than
+                  recollection. The full story lives on its own page.
+                </p>
+                <Link href="/career" className={`${ctaSolid} mt-5`}>
+                  Explore my full track record
+                  <ArrowRight size={15} />
+                </Link>
+              </Panel>
+            </div>
+          </aside>
         </div>
       </div>
     </section>

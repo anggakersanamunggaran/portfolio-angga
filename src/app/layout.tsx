@@ -1,12 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
+// Inter is a variable font, so weights 800/900 for the display type cost
+// nothing extra to load.
 const inter = Inter({
-  variable: "--font-sans",
+  variable: "--font-inter",
   subsets: ["latin"],
+});
+
+// Single weight, used only for the italic emphasis word inside headlines.
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: "400",
+  style: "italic",
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://anggakersana-dev.vercel.app";
@@ -77,10 +87,12 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0f" },
-  ],
+  // Single fixed theme now, so no prefers-color-scheme pair. Black matches the
+  // hero, which fills the first viewport.
+  themeColor: "#000000",
+  // Stops the browser rendering dark native UI (scrollbars, form controls,
+  // select popups) for visitors whose OS is in dark mode.
+  colorScheme: "light",
 };
 
 const jsonLd = {
@@ -128,8 +140,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} h-full antialiased`}
-      suppressHydrationWarning
+      className={`${inter.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
       <head>
         <script
@@ -137,7 +148,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-white dark:bg-surface-dark text-text-primary dark:text-text-dark font-sans">
+      <body className="min-h-full flex flex-col bg-paper text-body font-sans">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

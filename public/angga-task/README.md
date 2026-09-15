@@ -1,13 +1,13 @@
 # Portfolio Angga — Catatan Konteks & Log Perubahan
 
 > File ini dibuat agar kalau mau update website portfolio nanti, kamu (atau AI yang bantu) langsung paham konteks: apa yang sudah dikerjakan, di file mana, dengan prinsip/format apa.
-> Terakhir diperbarui: **2026-09-04**.
+> Terakhir diperbarui: **2026-09-15**.
 
 ---
 
 ## 1. Ringkasan Repos
 
-Portfolio single-page di `/` (Hero → ForYourBusiness → About → Skills → Projects → Experience → Contact) + halaman `/career` (track record yang angka-angkanya bersumber dari git commit history; Jira/Confluence tidak bisa diakses lagi sejak keluar ASTRNT).
+Portfolio single-page di `/` (Hero → ForYourBusiness → About → Skills → Projects → Experience → Contact), halaman `/career` (track record yang angka-angkanya bersumber dari git commit history), dan `/blog` + `/blog/<slug>` (tulisan soal keputusan teknis membangun situs ini). Jira/Confluence tidak bisa diakses lagi sejak keluar ASTRNT.
 
 - **Framework:** Next.js 16 (App Router), TypeScript
 - **Styling:** Tailwind CSS v4 (`@theme` di `globals.css`)
@@ -31,6 +31,16 @@ Hampir semua teks situs ada di **`src/data/portfolio.ts`**:
 | Riwayat kerja (Experience) | `experiences` |
 
 Komponen section-nya: `src/components/sections/*.tsx` (`ForYourBusiness.tsx` berisi kartu "What I can do for your business").
+
+Konten blog ada di **`src/data/posts.ts`** (bukan markdown, sengaja: biar tidak ada dependency markdown dan seluruh tipografi artikel diatur satu komponen, `src/components/blog/PostBody.tsx`):
+
+| Mau ubah | Edit di |
+|---|---|
+| Tambah tulisan | append ke array `posts`; `slug` jadi URL `/blog/<slug>` dan ikut ter-generate otomatis |
+| Judul | `title` (huruf kapital tebal) + `accent` (serif italic, maksimal beberapa kata) |
+| Isi | array `blocks`: `p`, `h2`, `ul`, `code`, `compare` |
+| Gambar before/after | blok `compare` (`before`/`after` + `caption`); file gambarnya di `public/blog/` |
+| Format kode inline | bungkus dengan backtick di dalam teks `p`/`ul`, contoh: `` `rounded-full` `` |
 
 ### Konvensi kerja kamu (berlaku juga untuk proyek lain)
 - **GitFlow selalu** sebagai branching strategy: feature branch dari `develop` → merge ke `develop` → `release` → `main`. (Repo portfolio ini khususnya cuma punya branch `main` dan langsung di-push untuk auto-deploy Vercel — konfirmasi dulu kalau mau diterapkan GitFlow penuh di sini.)
@@ -78,12 +88,29 @@ Komponen section-nya: `src/components/sections/*.tsx` (`ForYourBusiness.tsx` ber
 - **Signature Gmail** dibuat sebagai asset lokal `public/angga-task/signature-gmail-preview.html` (foto profil + WA/Gmail/Portfolio/LinkedIn/GitHub + quote bisnis). Copy-paste isinya ke Gmail → Settings → Signature.
 - ⚠️ **Repo GitHub ini PUBLIC.** Karena itu semua bahan lamaran personal (email, cover letter, tracker, signature, no. HP, foto) **tidak di-commit/di-push** ke `main`. File di-gitignore (lihat `.gitignore`). Backup/akses dari mana saja pakai tempat privat (Drive pribadi / repo privat), bukan repo ini.
 
+### Restyle total ke bahasa visual monokrom/editorial + halaman Blog (2026-09-15)
+
+Branch `feature/ZOG-design`, belum di-merge ke `main`. Ini **overhaul menyeluruh**, bukan penyesuaian: palet, bentuk, dan konvensinya berubah total.
+
+- **Palet:** monokrom. Satu hitam (`#000`) dan satu putih (`#fff`), pemisah selalu garis 1px. Tidak ada gradient, shadow, atau sudut membulat. Foto profil di hero **sengaja tetap berwarna** (satu-satunya elemen berwarna di situs).
+- **Struktur halaman:** hero hitam, section sesudahnya putih. `Navbar.tsx` mengukur elemen `[data-hero]` untuk menentukan warnanya, jadi halaman baru tidak perlu hero hitam sendiri.
+- **Dark mode dimatikan** dengan satu baris: `@custom-variant dark (&:where(.dark, .dark *))` membuat semua class `dark:` tidak pernah aktif. Alasannya: hero hitam tidak mungkin hidup berdampingan dengan tema yang mengubah permukaan jadi putih.
+- **Kunci cara kerjanya: token dulu, bukan sapuan komponen.** Radius, shadow, dan warna diubah nilainya di `@theme` / `@theme inline` (`src/app/globals.css`), sehingga seluruh situs ikut berubah tanpa menyentuh komponen. `rounded-full` **tidak** ikut token-driven (compiles ke calc), jadi lingkaran yang disengaja tetap ada.
+- **Tipografi yang mengerjakan desain:** Inter (via `next/font`) + Instrument Serif italic untuk kata penekanan. Utility: `label-micro` (11px uppercase, tracking 0.2em) untuk label struktural, `display-xl/l/m` untuk judul, `accent-serif` untuk aksen italic.
+  - ⚠️ **Jebakan yang pernah bikin font tidak kepakai:** `@theme inline` meng-inline nilai, jadi menulis `--font-sans: "Inter"` (string literal) tidak akan pernah cocok dengan nama hashed dari `next/font`. Harus `var(--font-inter)`.
+- **Aksesibilitas yang jadi tumpuan:** karena tidak ada warna aksen, link dalam paragraf wajib underline, focus ring 2px (hitam di putih, putih di hero hitam), `::selection` di-set per permukaan, dan `prefers-reduced-motion` harus menyelesaikan elemen ber-`opacity-0` ke keadaan akhirnya.
+- **Primitif baru:** `src/components/ui/Rule.tsx`, `src/components/ui/SectionHeader.tsx`, `src/components/ui/cta.ts`.
+- **Halaman `/blog` + `/blog/<slug>`** ditambahkan, plus tautan "Latest writing" di kaki hero (menggantikan petunjuk "Scroll" dekoratif). Tulisan pertamanya justru menceritakan keputusan desain di atas, lengkap dengan **perbandingan gambar before/after** (`public/blog/`, diambil dari situs live untuk sisi "before" dan dev server untuk sisi "after").
+- **Verifikasi:** jangan percaya screenshot untuk urusan layout. Alat screenshot pernah mengabaikan `--window-size` sehingga halaman ter-layout ~886px tapi ter-capture 390px, dan itu terlihat persis seperti bug overflow. Ukur dengan `getBoundingClientRect()` / `documentElement.scrollWidth` / `getComputedStyle()` dari browser sungguhan.
+- Angka di hero dan `/career` tidak berubah sama sekali: restyle ini murni tampilan, `src/data/portfolio.ts` tidak disentuh.
+
 ## 4. Konvensi & Constraint Penting
 
 - **File personal TIDAK pernah di-commit/di-push** (repo public): `screening-answer.md` (root), `public/angga-task/apply-to/` (email, cover letter, tracker lamaran), `public/angga-task/signature-gmail-preview.html`. Sudah masuk `.gitignore` (2026-09-04).
 - **`public/CV/` ikut di-commit & di-push** (keputusan 2026-09-04) supaya CV bisa di-download live dari situs. Yang di-push hanya CV (umum + 5 varian) + log ini, bukan bahan lamaran.
 - Jangan menambahkan kembali em-dash `—` pada copy paragraf/bullet yang tampil. Tanda pisah yang dipakai: titik dua (`:`), koma, atau restrukturisasi kalimat. En-dash `–` hanya untuk rentang tahun/tanggal.
 - Angka harus bersumber dari **git commit history yang masih ada** (Jira/Confluence tidak bisa diakses lagi sejak keluar ASTRNT, 2026). Jangan mengarang angka.
+- **Jangan kembalikan warna aksen, sudut membulat, shadow, atau dark mode** (sejak 2026-09-15). Semuanya dimatikan lewat token di `src/app/globals.css`. Kalau nanti ada kebutuhan visual, ubah nilai tokennya, jangan tambah `rounded-lg` / `shadow-md` / warna langsung di komponen.
 
 ## 5. Verifikasi Lokal
 

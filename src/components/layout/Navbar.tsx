@@ -12,19 +12,46 @@ const navLinks: { href: string; label: string }[] = [
   { href: "/#projects", label: "Projects" },
   { href: "/#experience", label: "Experience" },
   { href: "/career", label: "Career" },
+  { href: "/blog", label: "Blog" },
   { href: "/#contact", label: "Contact" },
 ];
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
   const pathname = usePathname();
 
+  /*
+   * The homepage opens on a black hero, so while the nav sits over it the
+   * links have to be white. Everything else is black on paper.
+   *
+   * The flip point is measured from the hero element itself rather than from a
+   * fixed pixel value or window.innerHeight: the hero is min-h-screen but its
+   * content can push it taller than the viewport on short or narrow screens,
+   * so a viewport-based threshold would flip the nav to black while the hero
+   * is still underneath it.
+   */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const hero = document.querySelector<HTMLElement>("[data-hero]");
+    const onScroll = () => {
+      if (!hero) {
+        // No hero on this route (/career), so the nav is never over ink.
+        setPastHero(false);
+        return;
+      }
+      setPastHero(hero.getBoundingClientRect().bottom <= 80);
+    };
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [pathname]);
+
+  // /career has no black hero, so it stays in the light state from the start.
+  const overHero = pathname === "/" && !pastHero;
 
   // Section links point to "/#section" so they work from any page.
   // When already on the homepage, smooth-scroll instead of re-navigating.
@@ -47,27 +74,34 @@ export function Navbar() {
     }
   };
 
-  const navItemClass =
-    "px-4 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:text-brand-primary dark:hover:text-white transition-colors rounded-lg hover:bg-neutral-100 dark:hover:bg-white/5";
+  const navItemClass = `label-micro block px-3 py-2 transition-colors ${
+    overHero ? "text-white/65 hover:text-white" : "text-muted hover:text-ink"
+  }`;
+
+  const ctaClass = `ml-2 inline-flex items-center gap-1.5 px-4 py-2.5 label-micro transition-colors ${
+    overHero
+      ? "bg-white text-black hover:bg-white/85"
+      : "bg-black text-white hover:bg-neutral-800"
+  }`;
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/80 dark:bg-surface-dark/80 backdrop-blur-xl border-b border-neutral-200 dark:border-border-dark-subtle shadow-xs"
-          : "bg-transparent"
+      className={`fixed top-0 inset-x-0 z-50 transition-colors duration-300 ${
+        overHero ? "bg-transparent" : "bg-paper border-b border-rule"
       }`}
     >
-      <nav className="mx-auto max-w-6xl px-6 lg:px-8">
+      <nav className="mx-auto max-w-[1400px] px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link
             href="/"
             onClick={handleLogoClick}
-            className="text-lg font-semibold tracking-tight text-brand-primary dark:text-white"
+            className={`text-base font-bold uppercase tracking-tight transition-colors ${
+              overHero ? "text-white" : "text-ink"
+            }`}
           >
             {personalInfo.shortName}
-            <span className="text-brand-accent">.</span>
+            <span className={overHero ? "text-white" : "text-ink"}>.</span>
           </Link>
 
           {/* Desktop nav */}
@@ -84,7 +118,7 @@ export function Navbar() {
                 href={personalInfo.resumeUrl}
                 download
                 aria-label="Download CV"
-                className="ml-2 inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg bg-brand-primary dark:bg-white text-white dark:text-brand-primary hover:bg-brand-accent dark:hover:bg-brand-100 transition-all"
+                className={ctaClass}
               >
                 Check out my resume
                 <Download size={15} />
@@ -95,7 +129,9 @@ export function Navbar() {
           {/* Mobile toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-neutral-700 dark:text-neutral-300 hover:text-brand-primary dark:hover:text-white transition-colors"
+            className={`md:hidden p-2 transition-colors ${
+              overHero ? "text-white" : "text-ink"
+            }`}
             aria-label="Toggle navigation"
           >
             {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -109,13 +145,17 @@ export function Navbar() {
           isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <ul className="bg-white dark:bg-surface-dark border-b border-neutral-200 dark:border-border-dark-subtle px-6 py-4 space-y-1">
+        <ul
+          className={`border-b px-6 py-4 space-y-1 ${
+            overHero ? "bg-black border-white/20" : "bg-paper border-rule"
+          }`}
+        >
           {navLinks.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
                 onClick={(e) => handleSectionClick(e, link.href)}
-                className={`block px-4 py-2.5 ${navItemClass}`}
+                className={`py-2.5 ${navItemClass}`}
               >
                 {link.label}
               </Link>
@@ -127,7 +167,7 @@ export function Navbar() {
               download
               onClick={() => setIsOpen(false)}
               aria-label="Download CV"
-              className="mt-1 flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg bg-brand-primary dark:bg-white text-white dark:text-brand-primary hover:bg-brand-accent dark:hover:bg-brand-100 transition-all"
+              className={`mt-2 flex items-center justify-between px-4 py-3 ${ctaClass.replace("ml-2 ", "")}`}
             >
               Check out my resume
               <Download size={15} />

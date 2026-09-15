@@ -17,9 +17,12 @@ import {
   GitCommitHorizontal,
   Layers,
   Mail,
+  MapPin,
   Sparkles,
   TicketCheck,
 } from "lucide-react";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { ctaSolid, ctaOutline } from "@/components/ui/cta";
 
 const careerTitle =
   "Career in detail — seven years of full-stack engineering at ASTRNT";
@@ -58,194 +61,211 @@ export const metadata: Metadata = {
   },
 };
 
+const practices = [
+  {
+    icon: GitCommitHorizontal,
+    title: "Requirements traceability",
+    body: "Every commit links code to a requirement: 916 distinct Jira ticket keys cited in commit messages across 13 projects.",
+  },
+  {
+    icon: TicketCheck,
+    title: "Sustained ownership",
+    body: "1,661 tickets held over seven years; 93% completed. The rest were handed on with progress intact, not abandoned.",
+  },
+  {
+    icon: FileText,
+    title: "Spec-first, then ship",
+    body: "19 PRDs, 30 design use cases and the company-wide PRD template, work defined then implemented by the same person.",
+  },
+  {
+    icon: Layers,
+    title: "Deliberate risk-taking",
+    body: "New technology is proven in low-risk projects first: TypeScript in a scraper in 2024 carried the flagship rebuild in 2026.",
+  },
+  {
+    icon: Calendar,
+    title: "Never dormant",
+    body: "88 of 88 calendar months active. A flat contribution line: the difference between bursts and someone a team can plan around.",
+  },
+  {
+    icon: Sparkles,
+    title: "Honest documentation",
+    body: "Specs that record their own failures and design reversals, including a security gap flagged before it could reach production.",
+  },
+];
+
+const heroFacts = [
+  { icon: Calendar, label: "May 2019 – Aug 2026" },
+  { icon: Briefcase, label: "Web Developer → Senior Full-Stack Engineer" },
+  { icon: MapPin, label: "Indonesia" },
+];
+
 export default function CareerPage() {
   return (
     <main>
-      {/* ---- Hero ---- */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-50/50 via-white to-white dark:from-brand-950/20 dark:via-surface-dark dark:to-surface-dark" />
-        <div className="absolute top-0 -right-1/4 w-[500px] h-[500px] rounded-full bg-brand-100/30 dark:bg-brand-600/5 blur-3xl" />
-
-        <div className="relative mx-auto max-w-6xl px-6 lg:px-8 pt-32 sm:pt-40 pb-16">
+      {/*
+        This page keeps the light treatment rather than opening on a second
+        black hero. The navbar reads the homepage hero to decide whether it sits
+        on ink, so a dark hero here would need that logic to grow a second case
+        for no real gain.
+      */}
+      <section className="pt-32 pb-16 sm:pt-40">
+        <div className="mx-auto max-w-[1400px] px-6 lg:px-8">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400 hover:text-brand-accent dark:hover:text-brand-400 transition-colors mb-8"
+            className="label-micro inline-flex items-center gap-2 text-muted transition-colors hover:text-ink"
           >
-            <ArrowLeft size={15} />
+            <ArrowLeft size={14} aria-hidden="true" />
             Back to homepage
           </Link>
 
-          <p className="text-sm font-semibold tracking-widest uppercase text-brand-accent dark:text-brand-400 mb-3">
-            The full track record
-          </p>
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-brand-primary dark:text-white max-w-3xl">
-            Seven years in HR technology, spanning two complete generations of the stack.
+          <p className="label-micro mt-12 text-muted">The full track record</p>
+          <h1 className="display-l mt-5 max-w-5xl">
+            Seven years in HR technology, spanning two complete generations of{" "}
+            <em className="accent-serif whitespace-nowrap">the stack</em>
           </h1>
 
-          <p className="mt-6 text-lg text-neutral-600 dark:text-text-dark-secondary leading-relaxed max-w-3xl">
-            Full-stack engineer at{" "}
-            <a
-              href="https://astrnt.co"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-brand-accent dark:text-brand-400 hover:underline"
-            >
-              ASTRNT
-            </a>{" "}
-            from May 2019 to August 2026. Principal contributor to the flagship recruiter
-            platform and the candidate assessment application, and the engineer who led the
-            ground-up rebuild on a modern stack, then wrote the product specifications that
-            drove it. Now open to senior full-stack and product-engineering roles.
-          </p>
-
-          <p className="mt-6 text-neutral-600 dark:text-text-dark-secondary leading-relaxed max-w-3xl text-base">
-            This page is built from primary sources rather than recollection: the commit
-            history across my Git identities, the Jira tickets cited in those commits, and
-            the documentation I authored. Every number below is verifiable.
-          </p>
-
-          <div className="mt-8 flex flex-wrap items-center gap-3 text-sm">
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-200 dark:border-border-dark-subtle text-neutral-700 dark:text-neutral-300">
-              <Calendar size={15} />
-              May 2019 – Aug 2026
-            </span>
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-200 dark:border-border-dark-subtle text-neutral-700 dark:text-neutral-300">
-              <Briefcase size={15} />
-              Web Developer → Senior Full-Stack Engineer
-            </span>
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-200 dark:border-border-dark-subtle text-neutral-700 dark:text-neutral-300">
-              <MapPinIcon />
-              Indonesia
-            </span>
+          <div className="mt-10 grid gap-10 lg:grid-cols-12">
+            <p className="text-sm leading-relaxed text-body lg:col-span-7">
+              Full-stack engineer at{" "}
+              <a
+                href="https://astrnt.co"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink underline underline-offset-2"
+              >
+                ASTRNT
+              </a>{" "}
+              from May 2019 to August 2026. Principal contributor to the flagship
+              recruiter platform and the candidate assessment application, and the
+              engineer who led the ground-up rebuild on a modern stack, then wrote the
+              product specifications that drove it. Now open to senior full-stack and
+              product-engineering roles.
+            </p>
+            <p className="text-sm leading-relaxed text-muted lg:col-span-5">
+              This page is built from primary sources rather than recollection: the
+              commit history across my Git identities, the Jira tickets cited in those
+              commits, and the documentation I authored. Every number below is
+              verifiable.
+            </p>
           </div>
+
+          <ul className="mt-12 flex flex-wrap gap-2">
+            {heroFacts.map((fact) => (
+              <li
+                key={fact.label}
+                className="inline-flex items-center gap-2 border border-rule px-4 py-2.5 label-micro text-muted"
+              >
+                <fact.icon size={14} aria-hidden="true" />
+                {fact.label}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
       {/* ---- The numbers ---- */}
-      <section className="relative py-20">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <p className="text-sm font-semibold tracking-widest uppercase text-brand-accent dark:text-brand-400 mb-3">
-              The numbers
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-brand-primary dark:text-white">
-              A sustained, auditable record
-            </h2>
-          </div>
+      <section className="py-20 sm:py-28">
+        <div className="mx-auto max-w-[1400px] px-6 lg:px-8">
+          <SectionHeader
+            eyebrow="The numbers"
+            title={
+              <>
+                A sustained,{" "}
+                <em className="accent-serif whitespace-nowrap">auditable</em> record
+              </>
+            }
+          />
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {/* Same hairline grid as the homepage sections. Numbers are solid
+              ink now; the old gradient-clipped text had no equivalent here. */}
+          <dl className="mt-14 grid border-t border-l border-rule grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
             {careerStats.map((stat) => (
-              <div
-                key={stat.label}
-                className="p-6 rounded-2xl bg-white dark:bg-surface-dark-secondary border border-neutral-200 dark:border-border-dark-subtle hover:border-brand-200 dark:hover:border-brand-600/50 transition-all duration-300"
-              >
-                <p className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-brand-600 to-brand-accent dark:from-brand-400 dark:to-brand-accent bg-clip-text text-transparent tabular-nums">
+              <div key={stat.label} className="border-b border-r border-rule p-6">
+                <dd className="text-3xl font-bold tabular-nums tracking-tight text-ink sm:text-4xl">
                   {stat.value}
-                </p>
-                <p className="mt-2 text-sm font-medium text-brand-primary dark:text-white">
-                  {stat.label}
-                </p>
+                </dd>
+                <dt className="mt-3 text-sm font-medium text-ink">{stat.label}</dt>
                 {stat.sub && (
-                  <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-                    {stat.sub}
-                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-muted">{stat.sub}</p>
                 )}
               </div>
             ))}
-          </div>
+          </dl>
         </div>
       </section>
 
       {/* ---- Three acts ---- */}
-      <section className="relative py-20 bg-surface-secondary/50 dark:bg-surface-dark-secondary/50">
-        <div className="mx-auto max-w-5xl px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <p className="text-sm font-semibold tracking-widest uppercase text-brand-accent dark:text-brand-400 mb-3">
-              The career arc
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-brand-primary dark:text-white">
-              Three acts, one trajectory
-            </h2>
-            <p className="mt-4 text-neutral-600 dark:text-text-dark-secondary max-w-xl mx-auto">
-              From feature contributor, to multi-product full-stack engineer, to the person
-              trusted with re-architecting the company&apos;s flagship product.
-            </p>
-          </div>
+      <section className="py-20 sm:py-28">
+        <div className="mx-auto max-w-[1400px] px-6 lg:px-8">
+          <SectionHeader
+            eyebrow="The career arc"
+            title={
+              <>
+                Three acts,{" "}
+                <em className="accent-serif whitespace-nowrap">one trajectory</em>
+              </>
+            }
+            description="From feature contributor, to multi-product full-stack engineer, to the person trusted with re-architecting the company's flagship product."
+          />
 
-          <div className="space-y-8">
-            {careerPhases.map((phase, index) => (
-              <div
+          <div className="mt-14">
+            {careerPhases.map((phase) => (
+              <article
                 key={phase.period}
-                className="grid md:grid-cols-[220px_1fr] gap-0 md:gap-10"
+                className="grid gap-6 border-t border-rule py-10 lg:grid-cols-12 lg:gap-10"
               >
-                {/* Period rail */}
-                <div className="md:text-right mb-3 md:mb-0">
-                  <p className="text-sm font-semibold text-brand-accent dark:text-brand-400 tabular-nums">
-                    {phase.period}
-                  </p>
-                  <p className="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mt-1">
-                    {phase.act}
-                  </p>
-                  {/* connector */}
-                  <div className="hidden md:flex justify-end items-center gap-3 mt-4">
-                    <div className="h-px w-16 bg-gradient-to-r from-transparent to-brand-400" />
-                    <div
-                      className={`w-4 h-4 rounded-full border-[3px] border-brand-accent dark:border-brand-400 bg-white dark:bg-surface-dark ${
-                        index === careerPhases.length - 1 ? "" : ""
-                      }`}
-                    />
-                  </div>
+                <div className="lg:col-span-3">
+                  <p className="label-micro tabular-nums text-ink">{phase.period}</p>
+                  <p className="label-micro mt-2 text-muted">{phase.act}</p>
                 </div>
-
-                {/* Content card */}
-                <div className="p-6 lg:p-8 rounded-2xl bg-white dark:bg-surface-dark-secondary border border-neutral-200 dark:border-border-dark-subtle">
-                  <p className="text-neutral-600 dark:text-text-dark-secondary leading-relaxed mb-4">
+                <div className="lg:col-span-9">
+                  <p className="max-w-2xl text-sm leading-relaxed text-body">
                     {phase.summary}
                   </p>
-                  <ul className="space-y-2.5">
+                  <ul className="mt-6 max-w-2xl space-y-2.5">
                     {phase.points.map((point) => (
                       <li
                         key={point}
-                        className="flex items-start gap-2.5 text-sm text-neutral-600 dark:text-text-dark-secondary leading-relaxed"
+                        className="flex items-start gap-3 text-sm leading-relaxed text-body"
                       >
-                        <span className="mt-2 w-1.5 h-1.5 rounded-full bg-brand-accent dark:bg-brand-400 shrink-0" />
+                        <span
+                          className="mt-2 h-1 w-1 shrink-0 bg-ink"
+                          aria-hidden="true"
+                        />
                         {point}
                       </li>
                     ))}
                   </ul>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
       {/* ---- Cloud chapter ---- */}
-      <section className="relative py-20">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <p className="text-sm font-semibold tracking-widest uppercase text-brand-accent dark:text-brand-400 mb-3">
-              {cloudMigration.eyebrow}
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-brand-primary dark:text-white max-w-3xl mx-auto">
-              {cloudMigration.title}
-            </h2>
-            <p className="mt-5 text-neutral-600 dark:text-text-dark-secondary max-w-2xl mx-auto leading-relaxed">
-              {cloudMigration.intro}
-            </p>
-          </div>
+      <section className="py-20 sm:py-28">
+        <div className="mx-auto max-w-[1400px] px-6 lg:px-8">
+          <SectionHeader
+            eyebrow={cloudMigration.eyebrow}
+            title={cloudMigration.title}
+            description={cloudMigration.intro}
+          />
 
-          <ul className="space-y-4 max-w-3xl mx-auto">
+          <ul className="mt-14 border-t border-rule">
             {cloudMigration.bullets.map((bullet) => (
               <li
                 key={bullet}
-                className="flex items-start gap-3 p-5 rounded-2xl bg-white dark:bg-surface-dark-secondary border border-neutral-200 dark:border-border-dark-subtle"
+                className="flex items-start gap-4 border-b border-rule py-6"
               >
                 <Cloud
                   size={16}
-                  className="mt-0.5 text-brand-accent dark:text-brand-400 shrink-0"
+                  strokeWidth={1.5}
+                  className="mt-0.5 shrink-0 text-ink"
+                  aria-hidden="true"
                 />
-                <span className="text-sm text-neutral-600 dark:text-text-dark-secondary leading-relaxed">
+                <span className="max-w-3xl text-sm leading-relaxed text-body">
                   {bullet}
                 </span>
               </li>
@@ -255,32 +275,30 @@ export default function CareerPage() {
       </section>
 
       {/* ---- Domain expertise ---- */}
-      <section className="relative py-20">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <p className="text-sm font-semibold tracking-widest uppercase text-brand-accent dark:text-brand-400 mb-3">
-              Domain expertise
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-brand-primary dark:text-white">
-              What seven years in one vertical teaches
-            </h2>
-            <p className="mt-4 text-neutral-600 dark:text-text-dark-secondary max-w-xl mx-auto">
-              HR technology knowledge that transfers less visibly than a framework, yet
-              matters more.
-            </p>
-          </div>
+      <section className="py-20 sm:py-28">
+        <div className="mx-auto max-w-[1400px] px-6 lg:px-8">
+          <SectionHeader
+            eyebrow="Domain expertise"
+            title={
+              <>
+                What seven years in one vertical{" "}
+                <em className="accent-serif whitespace-nowrap">teaches</em>
+              </>
+            }
+            description="HR technology knowledge that transfers less visibly than a framework, yet matters more."
+          />
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="mt-14 grid border-t border-l border-rule sm:grid-cols-2 lg:grid-cols-4">
             {domainExpertise.map((domain) => (
-              <div
-                key={domain.area}
-                className="p-5 rounded-2xl bg-white dark:bg-surface-dark-secondary border border-neutral-200 dark:border-border-dark-subtle hover:border-brand-200 dark:hover:border-brand-600/50 transition-all duration-300"
-              >
-                <Sparkles size={16} className="text-brand-accent dark:text-brand-400 mb-3" />
-                <h3 className="text-sm font-bold text-brand-primary dark:text-white mb-1.5">
-                  {domain.area}
-                </h3>
-                <p className="text-xs text-neutral-600 dark:text-text-dark-secondary leading-relaxed">
+              <div key={domain.area} className="border-b border-r border-rule p-6">
+                <Sparkles
+                  size={18}
+                  strokeWidth={1.5}
+                  className="text-ink"
+                  aria-hidden="true"
+                />
+                <h3 className="mt-5 text-sm font-bold text-ink">{domain.area}</h3>
+                <p className="mt-2 text-xs leading-relaxed text-muted">
                   {domain.blurb}
                 </p>
               </div>
@@ -290,60 +308,30 @@ export default function CareerPage() {
       </section>
 
       {/* ---- How I work ---- */}
-      <section className="relative py-20 bg-surface-secondary/50 dark:bg-surface-dark-secondary/50">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <p className="text-sm font-semibold tracking-widest uppercase text-brand-accent dark:text-brand-400 mb-3">
-              How I work
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-brand-primary dark:text-white">
-              Engineering practice, measured
-            </h2>
-          </div>
+      <section className="py-20 sm:py-28">
+        <div className="mx-auto max-w-[1400px] px-6 lg:px-8">
+          <SectionHeader
+            eyebrow="How I work"
+            title={
+              <>
+                Engineering practice,{" "}
+                <em className="accent-serif whitespace-nowrap">measured</em>
+              </>
+            }
+          />
 
-          <div className="grid sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
-            {[
-              {
-                icon: GitCommitHorizontal,
-                title: "Requirements traceability",
-                body: "Every commit links code to a requirement: 916 distinct Jira ticket keys cited in commit messages across 13 projects.",
-              },
-              {
-                icon: TicketCheck,
-                title: "Sustained ownership",
-                body: "1,661 tickets held over seven years; 93% completed. The rest were handed on with progress intact, not abandoned.",
-              },
-              {
-                icon: FileText,
-                title: "Spec-first, then ship",
-                body: "19 PRDs, 30 design use cases and the company-wide PRD template, work defined then implemented by the same person.",
-              },
-              {
-                icon: Layers,
-                title: "Deliberate risk-taking",
-                body: "New technology is proven in low-risk projects first: TypeScript in a scraper in 2024 carried the flagship rebuild in 2026.",
-              },
-              {
-                icon: Calendar,
-                title: "Never dormant",
-                body: "88 of 88 calendar months active. A flat contribution line: the difference between bursts and someone a team can plan around.",
-              },
-              {
-                icon: Sparkles,
-                title: "Honest documentation",
-                body: "Specs that record their own failures and design reversals, including a security gap flagged before it could reach production.",
-              },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="p-6 rounded-2xl bg-white dark:bg-surface-dark-secondary border border-neutral-200 dark:border-border-dark-subtle"
-              >
-                <item.icon size={18} className="text-brand-accent dark:text-brand-400 mb-3" />
-                <h3 className="text-sm font-bold text-brand-primary dark:text-white mb-1.5">
-                  {item.title}
-                </h3>
-                <p className="text-xs text-neutral-600 dark:text-text-dark-secondary leading-relaxed">
-                  {item.body}
+          <div className="mt-14 grid border-t border-l border-rule sm:grid-cols-2 lg:grid-cols-3">
+            {practices.map((practice) => (
+              <div key={practice.title} className="border-b border-r border-rule p-6">
+                <practice.icon
+                  size={18}
+                  strokeWidth={1.5}
+                  className="text-ink"
+                  aria-hidden="true"
+                />
+                <h3 className="mt-5 text-sm font-bold text-ink">{practice.title}</h3>
+                <p className="mt-2 text-xs leading-relaxed text-muted">
+                  {practice.body}
                 </p>
               </div>
             ))}
@@ -352,56 +340,38 @@ export default function CareerPage() {
       </section>
 
       {/* ---- Closing CTA ---- */}
-      <section className="relative py-20">
-        <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-brand-primary dark:text-white mb-4">
-            Interested in working together?
-          </h2>
-          <p className="text-neutral-600 dark:text-text-dark-secondary max-w-xl mx-auto mb-8">
-            I&apos;m open to senior full-stack and product-engineering roles in HR-tech,
-            B2B SaaS, or any domain where writing the spec and shipping the code go hand
-            in hand.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
+      <section className="py-20 sm:py-28">
+        <div className="mx-auto max-w-[1400px] px-6 lg:px-8">
+          <SectionHeader
+            eyebrow="Next"
+            title={
+              <>
+                Interested in working{" "}
+                <em className="accent-serif whitespace-nowrap">together?</em>
+              </>
+            }
+            description="I'm open to senior full-stack and product-engineering roles in HR-tech, B2B SaaS, or any domain where writing the spec and shipping the code go hand in hand."
+          />
+          <div className="mt-10 flex flex-wrap gap-3">
             <a
               href={`mailto:${personalInfo.email}?subject=Let%27s%20talk`}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-primary dark:bg-white text-white dark:text-brand-primary font-medium text-sm hover:bg-brand-accent dark:hover:bg-brand-100 transition-all duration-200"
+              className={ctaSolid}
             >
-              <Mail size={16} />
+              <Mail size={15} aria-hidden="true" />
               {personalInfo.email}
             </a>
             <a
               href="https://www.linkedin.com/in/angga-munggaran/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-200 font-medium text-sm hover:bg-neutral-100 dark:hover:bg-white/5 transition-all duration-200"
+              className={ctaOutline}
             >
               View LinkedIn
-              <ArrowUpRight size={16} />
+              <ArrowUpRight size={15} aria-hidden="true" />
             </a>
           </div>
         </div>
       </section>
     </main>
-  );
-}
-
-// Inline location icon (avoids pulling in an extra map for a single use)
-function MapPinIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="15"
-      height="15"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-      <circle cx="12" cy="10" r="3" />
-    </svg>
   );
 }

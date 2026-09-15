@@ -26,6 +26,16 @@ async function loadAvatar(): Promise<string | null> {
   }
 }
 
+const proof = ["7 YRS HR TECH", "11,697 COMMITS", "2,500 CONCURRENT"];
+
+/*
+ * The social card follows the site now: black, monochrome, square, and set in
+ * the same micro-label / display-type pairing.
+ *
+ * next/font output is not available to satori, so the serif italic accent used
+ * on the site cannot be reproduced here. The role line carries the contrast
+ * through weight and colour instead, which needs no extra font.
+ */
 export default async function OpengraphImage() {
   const avatar = await loadAvatar();
 
@@ -36,155 +46,83 @@ export default async function OpengraphImage() {
           width: "100%",
           height: "100%",
           display: "flex",
-          alignItems: "center",
-          background: "linear-gradient(135deg, #18244e 0%, #2c65e4 58%, #5b0ef5 100%)",
-          position: "relative",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          background: "#000000",
+          padding: "72px 80px",
         }}
       >
-        {/* decorative glow */}
-        <div
-          style={{
-            position: "absolute",
-            top: -160,
-            right: -120,
-            width: 520,
-            height: 520,
-            borderRadius: "50%",
-            background: "rgba(197,180,253,0.22)",
-            filter: "blur(60px)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: -180,
-            left: -140,
-            width: 460,
-            height: 460,
-            borderRadius: "50%",
-            background: "rgba(101,165,245,0.25)",
-            filter: "blur(60px)",
-          }}
-        />
+        {/* Top: eyebrow */}
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <span style={{ width: 12, height: 12, background: "#ffffff" }} />
+          <span style={{ fontSize: 22, color: "#a3a3a3", letterSpacing: 5 }}>
+            SENIOR FULL-STACK ENGINEER
+          </span>
+        </div>
 
+        {/* Middle: name + role + avatar */}
         <div
           style={{
-            flex: 1,
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            padding: "0 90px",
-            position: "relative",
           }}
         >
-          {/* Left: text */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              maxWidth: 720,
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <span
-                style={{
-                  width: 18,
-                  height: 18,
-                  borderRadius: "50%",
-                  background: "#34d399",
-                }}
-              />
-              <span style={{ fontSize: 26, color: "#bfdbfe", letterSpacing: 6 }}>
-                PORTFOLIO
-              </span>
-            </div>
-
+          <div style={{ display: "flex", flexDirection: "column", maxWidth: 720 }}>
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
-                fontSize: 84,
+                fontSize: 78,
                 fontWeight: 800,
                 color: "#ffffff",
-                lineHeight: 1.05,
-                marginTop: 26,
+                lineHeight: 0.95,
+                letterSpacing: -3,
               }}
             >
-              <span>Angga Kersana</span>
-              <span>Munggaran</span>
+              <span>ANGGA KERSANA</span>
+              <span>MUNGARAN</span>
             </div>
-
-            <div
-              style={{
-                fontSize: 40,
-                fontWeight: 600,
-                color: "#e9d5ff",
-                marginTop: 22,
-              }}
-            >
-              Senior Full-Stack Engineer
-            </div>
-
             <div
               style={{
                 display: "flex",
-                flexDirection: "column",
-                gap: 20,
-                marginTop: 26,
+                fontSize: 32,
+                fontWeight: 400,
+                color: "#a3a3a3",
+                marginTop: 28,
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span
-                  style={{ width: 56, height: 4, borderRadius: 2, background: "#5b0ef5" }}
-                />
-                <span style={{ fontSize: 28, color: "#e2e8f0" }}>
-                  Two stack generations. One flagship rebuild.
-                </span>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    background: "#ffffff",
-                    borderRadius: 999,
-                    padding: "12px 24px",
-                    boxShadow: "0 4px 16px rgba(0,0,0,0.18)",
-                  }}
-                >
-                  <span style={{ fontSize: 24, fontWeight: 700, color: "#18244e" }}>
-                    View my work
-                  </span>
-                </div>
-                <span
-                  style={{
-                    fontSize: 21,
-                    fontWeight: 600,
-                    color: "#bfdbfe",
-                    letterSpacing: 1,
-                  }}
-                >
-                  anggakersana.dev
-                </span>
-              </div>
+              Two stack generations. One flagship rebuild.
             </div>
           </div>
 
-          {/* Right: avatar */}
           {avatar ? (
             <img
               src={avatar}
               alt=""
               style={{
-                width: 248,
-                height: 248,
-                borderRadius: "50%",
-                border: "10px solid rgba(255,255,255,0.9)",
+                width: 224,
+                height: 224,
                 objectFit: "cover",
               }}
             />
           ) : null}
+        </div>
+
+        {/* Bottom: hairline + proof strip */}
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <span style={{ height: 1, background: "#262626" }} />
+          <div style={{ display: "flex", gap: 40, marginTop: 26 }}>
+            {proof.map((item) => (
+              <span
+                key={item}
+                style={{ fontSize: 20, color: "#a3a3a3", letterSpacing: 3 }}
+              >
+                {item}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     ),

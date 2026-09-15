@@ -1,6 +1,8 @@
 import { personalInfo } from "@/data/portfolio";
 import { Mail, Send } from "lucide-react";
 import { GithubIcon, LinkedinIcon, WhatsappIcon } from "@/components/ui/social-icons";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { ctaSolid } from "@/components/ui/cta";
 
 const iconMap: Record<string, React.ReactNode> = {
   github: <GithubIcon size={18} />,
@@ -42,59 +44,50 @@ const contactLinks = [
 
 export function Contact() {
   return (
-    <section id="contact" className="relative py-24 sm:py-32">
-      {/* Background */}
-      <div className="absolute inset-0 bg-surface-secondary/50 dark:bg-surface-dark-secondary/50" />
+    <section id="contact" className="py-20 sm:py-28">
+      <div className="mx-auto max-w-[1400px] px-6 lg:px-8">
+        <SectionHeader
+          eyebrow="Get in touch"
+          title={
+            <>
+              Let&apos;s work{" "}
+              <em className="accent-serif whitespace-nowrap">together</em>
+            </>
+          }
+          description="Have a project in mind or just want to chat? I'm always open to new opportunities and interesting conversations."
+        />
 
-      <div className="relative mx-auto max-w-6xl px-6 lg:px-8">
-        {/* Section header */}
-        <div className="text-center mb-16">
-          <h2 className="text-sm font-semibold tracking-widest uppercase text-brand-accent dark:text-brand-400 mb-3">
-            Get in Touch
-          </h2>
-          <h3 className="text-3xl sm:text-4xl font-bold text-brand-primary dark:text-white">
-            Let&apos;s work together
-          </h3>
-          <p className="mt-4 text-neutral-600 dark:text-text-dark-secondary max-w-xl mx-auto">
-            Have a project in mind or just want to chat? I&apos;m always open to
-            new opportunities and interesting conversations.
-          </p>
-        </div>
-
-        {/* Contact cards */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto mb-12">
+        {/* Same hairline grid as the offerings section. */}
+        <div className="mt-14 grid border-t border-l border-rule sm:grid-cols-2 lg:grid-cols-4">
           {contactLinks.map((link) => (
             <a
               key={link.label}
               href={link.url}
               target={link.url.startsWith("http") ? "_blank" : undefined}
               rel={link.url.startsWith("http") ? "noopener noreferrer" : undefined}
-              className="group p-6 rounded-2xl bg-white dark:bg-surface-dark-secondary border border-neutral-200 dark:border-border-dark-subtle hover:border-brand-200 dark:hover:border-brand-600/50 hover:shadow-md hover:shadow-brand-950/5 dark:hover:shadow-black/20 transition-all duration-300 text-center"
+              className="group border-b border-r border-rule p-6 transition-colors hover:bg-neutral-50"
             >
-              <div className="inline-flex p-3 rounded-xl bg-brand-50 dark:bg-brand-950/30 text-brand-accent dark:text-brand-400 mb-4 group-hover:scale-110 transition-transform">
-                {iconMap[link.icon]}
-              </div>
-              <h4 className="text-sm font-semibold text-brand-primary dark:text-white mb-1">
-                {link.label}
-              </h4>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-2 line-clamp-1">
+              <span className="text-ink">{iconMap[link.icon]}</span>
+              <h3 className="label-micro mt-6 text-ink">{link.label}</h3>
+              <p className="mt-2 truncate text-sm font-medium text-ink">
                 {link.value}
               </p>
-              <p className="text-xs text-neutral-400 dark:text-neutral-500">
-                {link.description}
-              </p>
+              <p className="mt-1 text-xs text-muted">{link.description}</p>
             </a>
           ))}
         </div>
 
-        {/* CTA */}
-        <div className="text-center">
+        <div className="mt-12 flex flex-col gap-6 border-t border-rule pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="max-w-lg text-sm leading-relaxed text-muted">
+            Based in {personalInfo.location}, working remotely with teams across time
+            zones.
+          </p>
           <a
             href={`mailto:${personalInfo.email}?subject=Hello%20Angga`}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-primary dark:bg-white text-white dark:text-brand-primary font-medium text-sm hover:bg-brand-accent dark:hover:bg-brand-100 transition-all duration-200 shadow-sm hover:shadow-md"
+            className={ctaSolid}
           >
-            <Send size={16} />
             Send me an email
+            <Send size={15} />
           </a>
         </div>
       </div>

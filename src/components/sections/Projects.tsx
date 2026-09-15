@@ -1,12 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { projects, type Project } from "@/data/portfolio";
 import { ExternalLink, ChevronRight, X, Briefcase, Rocket } from "lucide-react";
 import { GithubIcon, GitlabIcon } from "@/components/ui/social-icons";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 
 const workProjects = projects.filter((p) => p.kind === "work");
 const sideProjects = projects.filter((p) => p.kind === "side");
+
+/** Micro label with a hairline running to the edge. Groups the two grids. */
+function GroupLabel({
+  icon: Icon,
+  children,
+}: {
+  icon: typeof Briefcase;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center gap-4">
+      <Icon size={16} strokeWidth={1.5} className="shrink-0 text-ink" aria-hidden="true" />
+      <h3 className="label-micro text-ink">{children}</h3>
+      <span className="h-px flex-1 bg-rule" />
+    </div>
+  );
+}
 
 interface ProjectCardProps {
   project: Project;
@@ -17,96 +35,87 @@ interface ProjectCardProps {
 function ProjectCard({ project, onOpen, featured }: ProjectCardProps) {
   return (
     <article
-      className={`group relative flex flex-col bg-white dark:bg-surface-dark-secondary rounded-2xl border border-neutral-200 dark:border-border-dark-subtle overflow-hidden hover:border-brand-200 dark:hover:border-brand-600/50 transition-all duration-300 hover:shadow-lg hover:shadow-brand-950/5 dark:hover:shadow-black/20 ${
+      className={`group flex flex-col border-b border-r border-rule ${
         featured ? "md:col-span-2" : ""
       }`}
     >
-      {/* Card gradient accent */}
-      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-600 to-brand-accent dark:from-brand-400 dark:to-brand-accent" />
-
       <div
         className={`flex flex-1 ${
-          featured ? "flex-col lg:flex-row gap-8 p-6 lg:p-10" : "flex-col p-6 lg:p-8"
+          featured ? "flex-col gap-8 p-8 lg:flex-row lg:p-10" : "flex-col p-8"
         }`}
       >
         {/* Main column */}
-        <div className="flex flex-col flex-1">
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-1 flex-col">
+          <ul className="mb-5 flex flex-wrap gap-2">
             {project.tags.slice(0, 3).map((tag) => (
-              <span
+              <li
                 key={tag}
-                className="px-2.5 py-1 text-xs font-medium rounded-md bg-brand-50 dark:bg-brand-950/30 text-brand-600 dark:text-brand-400"
+                className="border border-rule px-2.5 py-1 label-micro text-muted"
               >
                 {tag}
-              </span>
+              </li>
             ))}
             {project.tags.length > 3 && (
-              <span className="px-2.5 py-1 text-xs font-medium rounded-md bg-neutral-100 dark:bg-white/5 text-neutral-500 dark:text-neutral-400">
+              <li className="border border-rule px-2.5 py-1 label-micro text-muted">
                 +{project.tags.length - 3}
-              </span>
+              </li>
             )}
-          </div>
+          </ul>
 
-          {/* Title */}
           <h4
-            className={`font-bold text-brand-primary dark:text-white mb-2 group-hover:text-brand-accent dark:group-hover:text-brand-400 transition-colors ${
-              featured ? "text-2xl lg:text-3xl" : "text-xl"
+            className={`font-bold text-ink ${
+              featured ? "display-m" : "text-xl"
             }`}
           >
             {project.title}
           </h4>
 
-          {/* Description */}
-          <p className="text-sm text-neutral-600 dark:text-text-dark-secondary leading-relaxed mb-4 flex-1">
+          <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">
             {project.description}
           </p>
 
-          {/* Year */}
-          <p className="text-xs text-neutral-400 dark:text-neutral-500 mb-4">
-            {project.year}
-          </p>
+          <p className="label-micro mt-5 text-muted">{project.year}</p>
 
-          {/* Actions */}
-          <div className="flex items-center gap-3">
+          <div className="mt-5 flex items-center gap-4">
             <button
+              type="button"
               onClick={() => onOpen(project.id)}
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-accent dark:text-brand-400 hover:text-brand-accent-hover dark:hover:text-brand-200 transition-colors"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-ink underline underline-offset-4"
             >
-              View Details
-              <ChevronRight size={14} />
+              View details
+              <ChevronRight size={14} aria-hidden="true" />
             </button>
 
-            <div className="flex items-center gap-2 ml-auto">
+            <div className="ml-auto flex items-center gap-1">
               {project.links?.github && (
                 <a
-                  href={project.links?.github}
+                  href={project.links.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-brand-accent dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 transition-all"
-                  aria-label="View on GitHub"
+                  className="p-2 text-muted transition-colors hover:text-ink"
+                  aria-label={`${project.title} on GitHub`}
                 >
                   <GithubIcon size={16} />
                 </a>
               )}
               {project.links?.gitlab && (
                 <a
-                  href={project.links?.gitlab}
+                  href={project.links.gitlab}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-brand-accent dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 transition-all"
-                  aria-label="View on GitLab"
+                  className="p-2 text-muted transition-colors hover:text-ink"
+                  aria-label={`${project.title} on GitLab`}
                 >
                   <GitlabIcon size={16} />
                 </a>
               )}
               {project.links?.live && (
                 <a
-                  href={project.links?.live}
+                  href={project.links.live}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-brand-accent dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-950/30 transition-all"
-                  aria-label="View live site"
+                  className="p-2 text-muted transition-colors hover:text-ink"
+                  aria-label={`${project.title} live site`}
                 >
                   <ExternalLink size={16} />
                 </a>
@@ -115,33 +124,31 @@ function ProjectCard({ project, onOpen, featured }: ProjectCardProps) {
           </div>
         </div>
 
-        {/* Right rail — shown on the featured card */}
+        {/* Right rail on the featured card, divided by a vertical hairline. */}
         {featured && (
-          <aside className="lg:w-80 lg:shrink-0 flex flex-col lg:border-l lg:border-neutral-200 dark:lg:border-neutral-800 lg:pl-8">
-            <h5 className="text-xs font-semibold tracking-wider uppercase text-brand-accent dark:text-brand-400 mb-3">
-              Key moves
-            </h5>
-            <ul className="space-y-2.5">
-              {project.highlights.map((h, i) => (
+          <aside className="flex flex-col lg:w-80 lg:shrink-0 lg:border-l lg:border-rule lg:pl-8">
+            <h5 className="label-micro text-muted">Key moves</h5>
+            <ul className="mt-4 space-y-3">
+              {project.highlights.map((highlight) => (
                 <li
-                  key={i}
-                  className="flex items-start gap-2 text-sm text-neutral-600 dark:text-text-dark-secondary"
+                  key={highlight}
+                  className="flex items-start gap-3 text-sm leading-relaxed text-body"
                 >
-                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-brand-accent dark:bg-brand-400 shrink-0" />
-                  {h}
+                  <span className="mt-2 h-1 w-1 shrink-0 bg-ink" aria-hidden="true" />
+                  {highlight}
                 </li>
               ))}
             </ul>
-            <div className="mt-auto pt-6 flex flex-wrap gap-2">
-              {project.techStack.slice(0, 6).map((t) => (
-                <span
-                  key={t.name}
-                  className="px-2.5 py-1 text-xs font-medium rounded-md bg-neutral-100 dark:bg-white/5 text-neutral-600 dark:text-neutral-300"
+            <ul className="mt-auto flex flex-wrap gap-2 pt-8">
+              {project.techStack.slice(0, 6).map((tech) => (
+                <li
+                  key={tech.name}
+                  className="border border-rule px-2.5 py-1 label-micro text-muted"
                 >
-                  {t.name}
-                </span>
+                  {tech.name}
+                </li>
               ))}
-            </div>
+            </ul>
           </aside>
         )}
       </div>
@@ -151,211 +158,202 @@ function ProjectCard({ project, onOpen, featured }: ProjectCardProps) {
 
 export function Projects() {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const openProject = projects.find((p) => p.id === selectedProject);
 
+  /*
+   * Dialog behaviour: Escape closes, the page behind stops scrolling, focus
+   * moves into the panel on open and returns to whatever opened it on close.
+   * Without the focus move, keyboard users keep tabbing through the page
+   * underneath the overlay.
+   */
+  useEffect(() => {
+    if (!selectedProject) return;
+
+    const opener = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedProject(null);
+    };
+    document.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+      opener?.focus();
+    };
+  }, [selectedProject]);
+
   return (
-    <section id="projects" className="relative py-24 sm:py-32">
-      {/* Background */}
-      <div className="absolute inset-0 bg-surface-secondary/50 dark:bg-surface-dark-secondary/50" />
+    <section id="projects" className="py-20 sm:py-28">
+      <div className="mx-auto max-w-[1400px] px-6 lg:px-8">
+        <SectionHeader
+          eyebrow="Projects"
+          title={
+            <>
+              What I&apos;ve{" "}
+              <em className="accent-serif whitespace-nowrap">built</em>
+            </>
+          }
+          description="Production-grade platforms I've designed, shipped, and kept running, from flagship hiring software to side projects."
+        />
 
-      <div className="relative mx-auto max-w-6xl px-6 lg:px-8">
-        {/* Section header */}
-        <div className="text-center mb-16">
-          <h2 className="text-sm font-semibold tracking-widest uppercase text-brand-accent dark:text-brand-400 mb-3">
-            Projects
-          </h2>
-          <h3 className="text-3xl sm:text-4xl font-bold text-brand-primary dark:text-white">
-            What I&apos;ve built
-          </h3>
-          <p className="mt-4 text-neutral-600 dark:text-text-dark-secondary max-w-xl mx-auto">
-            Production-grade platforms I&apos;ve designed, shipped, and kept running,
-            from flagship hiring software to side projects.
-          </p>
-        </div>
-
-        {/* At ASTRNT */}
-        <div className="mb-4 flex items-center gap-2">
-          <span className="inline-flex p-1.5 rounded-lg bg-brand-50 dark:bg-brand-950/30 text-brand-accent dark:text-brand-400">
-            <Briefcase size={15} />
-          </span>
-          <h4 className="text-sm font-semibold tracking-widest uppercase text-brand-primary dark:text-white">
-            At ASTRNT · commercial products
-          </h4>
-          <div className="hidden sm:block h-px flex-1 bg-neutral-200 dark:bg-neutral-800 ml-2" />
-        </div>
-        <div className="grid md:grid-cols-2 gap-6 lg:gap-8 mb-16">
-          {workProjects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              onOpen={setSelectedProject}
-              featured={project.featured}
-            />
-          ))}
+        {/* Commercial work */}
+        <div className="mt-14">
+          <GroupLabel icon={Briefcase}>At ASTRNT · commercial products</GroupLabel>
+          <div className="mt-6 grid border-t border-l border-rule md:grid-cols-2">
+            {workProjects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                onOpen={setSelectedProject}
+                featured={project.featured}
+              />
+            ))}
+          </div>
         </div>
 
         {/* Side projects */}
-        <div className="mb-4 flex items-center gap-2">
-          <span className="inline-flex p-1.5 rounded-lg bg-neutral-100 dark:bg-white/5 text-neutral-500 dark:text-neutral-400">
-            <Rocket size={15} />
-          </span>
-          <h4 className="text-sm font-semibold tracking-widest uppercase text-brand-primary dark:text-white">
-            Side projects & experiments
-          </h4>
-          <div className="hidden sm:block h-px flex-1 bg-neutral-200 dark:bg-neutral-800 ml-2" />
-        </div>
-        <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
-          {sideProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} onOpen={setSelectedProject} />
-          ))}
+        <div className="mt-16">
+          <GroupLabel icon={Rocket}>Side projects & experiments</GroupLabel>
+          <div className="mt-6 grid border-t border-l border-rule md:grid-cols-2">
+            {sideProjects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                onOpen={setSelectedProject}
+              />
+            ))}
 
-          {/* Fill card: more on GitHub */}
-          <a
-            href="https://github.com/anggakersanamunggaran"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative flex items-center justify-center min-h-[200px] rounded-2xl border border-dashed border-neutral-300 dark:border-neutral-700 bg-white/40 dark:bg-surface-dark-secondary/40 hover:border-brand-400 dark:hover:border-brand-500 hover:bg-brand-50/40 dark:hover:bg-brand-950/10 transition-all duration-300"
-          >
-            <div className="text-center p-6">
-              <GithubIcon size={28} className="mx-auto text-neutral-400 dark:text-neutral-500 mb-3 group-hover:text-brand-accent dark:group-hover:text-brand-400 transition-colors" />
-              <p className="text-sm font-medium text-neutral-600 dark:text-neutral-300">
-                More experiments on GitHub
-              </p>
-              <p className="mt-1 text-xs text-neutral-400 dark:text-neutral-500">
-                Explore my public repos
-              </p>
-            </div>
-          </a>
+            <a
+              href="https://github.com/anggakersanamunggaran"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex min-h-[200px] items-center justify-center border-b border-r border-rule p-8 transition-colors hover:bg-neutral-50"
+            >
+              <span className="text-center">
+                <GithubIcon size={26} className="mx-auto text-ink" />
+                <span className="mt-4 block text-sm font-medium text-ink">
+                  More experiments on GitHub
+                </span>
+                <span className="mt-1 block label-micro text-muted">
+                  Explore my public repos
+                </span>
+              </span>
+            </a>
+          </div>
         </div>
       </div>
 
-      {/* Detail Modal */}
       {selectedProject && openProject && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 animate-fade-in"
           onClick={() => setSelectedProject(null)}
         >
           <div
-            className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-white dark:bg-surface-dark rounded-2xl border border-neutral-200 dark:border-border-dark-subtle shadow-2xl animate-scale-in"
-            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="project-dialog-title"
+            className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto border border-rule bg-paper"
+            onClick={(event) => event.stopPropagation()}
           >
-            {/* Close button */}
-            <button
-              onClick={() => setSelectedProject(null)}
-              className="absolute top-4 right-4 p-2 rounded-lg text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/5 transition-all"
-              aria-label="Close modal"
-            >
-              <X size={18} />
-            </button>
-
-            {/* Gradient bar */}
-            <div className="h-1.5 bg-gradient-to-r from-brand-600 to-brand-accent dark:from-brand-400 dark:to-brand-accent" />
-
-            <div className="p-6 lg:p-8">
-              {/* Kind badge */}
-              <span
-                className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-md mb-4 ${
-                  openProject.kind === "work"
-                    ? "bg-brand-50 dark:bg-brand-950/30 text-brand-accent dark:text-brand-400"
-                    : "bg-neutral-100 dark:bg-white/5 text-neutral-500 dark:text-neutral-400"
-                }`}
-              >
-                {openProject.kind === "work" ? <Briefcase size={12} /> : <Rocket size={12} />}
+            <div className="sticky top-0 flex items-center justify-between border-b border-rule bg-paper px-6 py-4">
+              <span className="label-micro text-muted">
                 {openProject.kind === "work" ? "At ASTRNT" : "Side project"}
               </span>
+              <button
+                ref={closeButtonRef}
+                type="button"
+                onClick={() => setSelectedProject(null)}
+                className="p-1 text-muted transition-colors hover:text-ink"
+                aria-label="Close project details"
+              >
+                <X size={18} />
+              </button>
+            </div>
 
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2 mb-4">
+            <div className="p-6 lg:p-8">
+              <ul className="mb-5 flex flex-wrap gap-2">
                 {openProject.tags.map((tag) => (
-                  <span
+                  <li
                     key={tag}
-                    className="px-2.5 py-1 text-xs font-medium rounded-md bg-brand-50 dark:bg-brand-950/30 text-brand-600 dark:text-brand-400"
+                    className="border border-rule px-2.5 py-1 label-micro text-muted"
                   >
                     {tag}
-                  </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
 
-              <h3 className="text-2xl font-bold text-brand-primary dark:text-white mb-1">
+              <h3 id="project-dialog-title" className="display-m text-ink">
                 {openProject.title}
               </h3>
-              <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-6">
-                {openProject.year}
-              </p>
+              <p className="label-micro mt-3 text-muted">{openProject.year}</p>
 
-              <p className="text-neutral-600 dark:text-text-dark-secondary leading-relaxed mb-6">
+              <p className="mt-6 text-sm leading-relaxed text-body">
                 {openProject.longDescription}
               </p>
 
-              {/* Highlights */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-brand-primary dark:text-white mb-3">
-                  Key Highlights
-                </h4>
-                <ul className="space-y-2">
-                  {openProject.highlights.map((h, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-2 text-sm text-neutral-600 dark:text-text-dark-secondary"
-                    >
-                      <span className="mt-0.5 w-1.5 h-1.5 rounded-full bg-brand-accent dark:bg-brand-400 shrink-0" />
-                      {h}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <h4 className="label-micro mt-8 text-muted">Key highlights</h4>
+              <ul className="mt-4 space-y-3">
+                {openProject.highlights.map((highlight) => (
+                  <li
+                    key={highlight}
+                    className="flex items-start gap-3 text-sm leading-relaxed text-body"
+                  >
+                    <span className="mt-2 h-1 w-1 shrink-0 bg-ink" aria-hidden="true" />
+                    {highlight}
+                  </li>
+                ))}
+              </ul>
 
-              {/* Tech Stack */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-brand-primary dark:text-white mb-3">
-                  Tech Stack
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {openProject.techStack.map((t) => (
-                    <span
-                      key={`${t.name}-${t.category}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-100 dark:bg-white/5 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-border-dark-subtle"
-                    >
-                      {t.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              <h4 className="label-micro mt-8 text-muted">Tech stack</h4>
+              <ul className="mt-4 flex flex-wrap gap-2">
+                {openProject.techStack.map((tech) => (
+                  <li
+                    key={`${tech.name}-${tech.category}`}
+                    className="border border-rule px-2.5 py-1 label-micro text-muted"
+                  >
+                    {tech.name}
+                  </li>
+                ))}
+              </ul>
 
-              {/* Links */}
-              <div className="flex flex-wrap gap-3 pt-4 border-t border-neutral-200 dark:border-border-dark-subtle">
+              <div className="mt-8 flex flex-wrap gap-3 border-t border-rule pt-6">
                 {openProject.links?.github && (
                   <a
-                    href={openProject.links?.github}
+                    href={openProject.links.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-white/5 transition-all"
+                    className="inline-flex items-center gap-2 border border-rule px-4 py-2 label-micro text-ink transition-colors hover:border-ink"
                   >
-                    <GithubIcon size={16} />
-                    Source Code
+                    <GithubIcon size={15} />
+                    Source code
                   </a>
                 )}
                 {openProject.links?.gitlab && (
                   <a
-                    href={openProject.links?.gitlab}
+                    href={openProject.links.gitlab}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-white/5 transition-all"
+                    className="inline-flex items-center gap-2 border border-rule px-4 py-2 label-micro text-ink transition-colors hover:border-ink"
                   >
-                    <GitlabIcon size={16} />
-                    Source Code
+                    <GitlabIcon size={15} />
+                    Source code
                   </a>
                 )}
                 {openProject.links?.live && (
                   <a
-                    href={openProject.links?.live}
+                    href={openProject.links.live}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-white/5 transition-all"
+                    className="inline-flex items-center gap-2 border border-rule px-4 py-2 label-micro text-ink transition-colors hover:border-ink"
                   >
-                    <ExternalLink size={16} />
-                    {openProject.kind === "work" ? "Live Product" : "Live Demo"}
+                    <ExternalLink size={15} />
+                    {openProject.kind === "work" ? "Live product" : "Live demo"}
                   </a>
                 )}
               </div>
