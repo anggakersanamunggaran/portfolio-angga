@@ -8,14 +8,14 @@
   *{box-sizing:border-box;margin:0;padding:0;}
   html{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   body{font-family:"Inter","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);font-size:10px;line-height:1.42;background:#fff;}
-  .page{max-width:210mm;margin:0 auto;padding:10mm 12mm 8mm;}
+  .page{max-width:210mm;margin:0 auto;padding:10mm 12mm 6mm;}
   a{color:var(--accent);text-decoration:none;}
   .head{border-bottom:2px solid var(--accent);padding-bottom:7px;margin-bottom:11px;}
   .head h1{font-size:22px;letter-spacing:.4px;color:var(--accent);font-weight:800;}
   .head .tagline{font-size:11.5px;font-weight:600;color:#3a4661;margin-top:2px;}
   .contact{margin-top:5px;font-size:9.4px;color:var(--muted);}
   .contact span.sep{color:#b6bfd0;padding:0 4px;}
-  section{margin-bottom:11px;}
+  section{margin-bottom:8px;}
   h2{font-size:11px;text-transform:uppercase;letter-spacing:1.1px;color:var(--accent);border-bottom:1px solid var(--line);padding-bottom:3px;margin-bottom:6px;font-weight:800;}
   p.profile{font-size:10px;color:#28303f;}
   .job{margin-bottom:10px;}
@@ -40,7 +40,7 @@
   .skill-line .k{font-weight:700;color:#141b2b;display:inline-block;min-width:122px;}
   .skill-line .v{color:#33405a;}
   .proof{font-size:8.6px;color:#7c8698;border-top:1px solid var(--line);padding-top:5px;margin-top:9px;}
-  @media print{@page{size:A4;margin:0;}body{width:210mm;}.page{padding:10mm 12mm 8mm;}}
+  @media print{@page{size:A4;margin:0;}body{width:210mm;}.page{padding:10mm 12mm 6mm;}}
 </style>
 </head>
 <body>
@@ -48,7 +48,7 @@
 
   <header class="head">
     <h1>ANGGA KERSANA MUNGGARAN</h1>
-    <p class="tagline">Senior Frontend Engineer &middot; React / Next.js / TypeScript &middot; 7+ years in HR technology</p>
+    <p class="tagline">Senior Frontend Engineer &middot; TypeScript / JavaScript &middot; React, Next.js, Redux &middot; complex, scalable UIs</p>
     <p class="contact">
       Cimahi, West Java, Indonesia<span class="sep">·</span>+62 813-2423-0307<span class="sep">·</span>
       <a href="mailto:anggakersana@gmail.com">anggakersana@gmail.com</a><span class="sep">·</span>
@@ -61,12 +61,11 @@
   <section>
     <h2>Profile</h2>
     <p class="profile">
-      Senior frontend engineer with 7+ years building web interfaces that people use under real pressure. At ASTRNT I owned
-      the candidate-facing React experience: asynchronous video interviews over WebRTC and the Media API, resumable upload,
-      camera and microphone device testing, online proctoring, and five question engines. I then led the ground-up
-      rebuild of the recruiter dashboard on <b>Next.js 16, React 19 and TypeScript</b>, and drove the front-end bundle down
-      about 92%. I care about resilience on unknown devices and weak connections, cross-browser behaviour, and interfaces
-      that look intentional because they are. Now open to <b>senior frontend roles</b>.
+      Senior frontend engineer, 7+ years building web interfaces people use under real pressure. At ASTRNT I owned the
+      candidate-facing React experience: async video interviews over WebRTC, resumable upload and device testing, then led
+      the ground-up rebuild of the recruiter dashboard on <b>Next.js 16, React 19 and TypeScript</b>, cutting the bundle
+      about 92%. I work in CSS at scale: responsive layouts, cross-browser on Safari, Firefox and Edge. Now open to
+      <b>senior frontend roles</b>.
     </p>
   </section>
 
@@ -75,10 +74,10 @@
     <div class="job">
       <div class="job-head">
         <div>
-          <div class="role">Senior Full-Stack Engineer <span style="font-weight:600;color:#3a4661;">(frontend-led: React / Next.js / TypeScript)</span></div>
+          <div class="role">Full-Stack Engineer <span style="font-weight:600;color:#3a4661;">(frontend-led: React / Next.js / TypeScript)</span></div>
           <div class="org">ASTRNT (astrnt.co) &nbsp;&middot;&nbsp; HR-technology company. Asynchronous video-interview and online-assessment platform for hiring</div>
         </div>
-        <div class="date">May 2019 &ndash; Aug 2026</div>
+        <div class="date">Apr 2019 &ndash; Aug 2026</div>
       </div>
       <p class="ctx">Full-time &middot; principal contributor: roughly 11,700 commits, 35 repositories, 1,661 Jira tickets held (93% completed).</p>
       <ul>
@@ -119,43 +118,68 @@
           Established a no-mock E2E policy with Cypress and code-review gates on the rebuild, and added real-time video-quality
           checks that tell a candidate to retake instead of silently submitting unusable footage.
         </li>
+        <li>
+          <b class="lead">Built the release pipeline the front ends shipped through.</b>
+          Twin build-aws / build-azure pipelines per app on Azure DevOps so each environment switched at build time, git remotes
+          and CI moved onto Azure DevOps with a beta line running alongside production, and PM2 process management across the
+          product family&rsquo;s servers.
+        </li>
       </ul>
     </div>
 
     <div class="job sub-jobs">
+
       <div class="job-head">
         <div>
-          <div class="org">Earlier roles (2016 &ndash; 2019) &nbsp;<span style="font-weight:600;">&middot; Frontend and full-stack development</span></div>
+          <div class="role">Full-Stack Developer <span style="font-weight:600;color:#3a4661;">(Freelance)</span></div>
+          <div class="org">langgan.id &nbsp;&middot;&nbsp; SaaS website-builder platform with a visual editor</div>
         </div>
-        <div class="date">2016 &ndash; 2019</div>
+        <div class="date">Aug 2019 &ndash; Dec 2019</div>
       </div>
       <ul>
-        <li><b class="lead">Rebuilt a news portal frontend and HR employee system</b> (Galamedia Perkasa) and a back-office mobile app in Ionic (Wahana Saabiq), always with documentation delivered on time.</li>
+        <li><b class="lead">Built the React editor and its Laravel backend</b> (user management, billing, APIs), letting non-technical users create and manage their own sites without engineering help.</li>
       </ul>
+
+      <div class="job-head" style="margin-top:6px;">
+        <div>
+          <div class="role">Fullstack Programmer</div>
+          <div class="org">PT. Rumah Sakit Padjadjaran, &ldquo;Edudok&rdquo; (Telkom Incubator)</div>
+        </div>
+        <div class="date">Sep 2018 &ndash; Apr 2019</div>
+      </div>
+      <ul>
+        <li><b class="lead">Built healthcare platform modules in AngularJS against a Lumen PHP API</b> serving 6 clinic clients, applying OOP and SOLID during refactoring to reduce technical debt across all of them.</li>
+      </ul>
+
+      <div class="job-head" style="margin-top:6px;">
+        <div>
+          <div class="org">Earlier (2016 &ndash; 2018) &nbsp;<span style="font-weight:600;">&middot; Galamedia Perkasa (news-portal frontend, HR system) &middot; Wahana Saabiq (Ionic mobile app) &middot; Cihanjuang Inti Teknik (Laravel MRP)</span></div>
+        </div>
+        <div class="date">2016 &ndash; 2018</div>
+      </div>
     </div>
   </section>
 
   <section>
     <h2>Awards &amp; Achievements</h2>
-    <div class="award"><b>&ldquo;Set Objective, Move Fast&rdquo; Award</b> <span class="when">(ASTRNT, Q3 2025)</span>. For delivering significant results that represent the company value.</div>
-    <div class="award"><b>&ldquo;We Do Excellence &amp; Personal Growth&rdquo; Award</b> <span class="when">(ASTRNT, 2026)</span>. For outstanding personal and professional excellence.</div>
+    <div class="award"><b>ASTRNT awards</b> <span class="when">(2025 &amp; 2026)</span>: &ldquo;Set Objective, Move Fast&rdquo; and &ldquo;We Do Excellence &amp; Personal Growth&rdquo;, both for delivering significant results and outstanding personal excellence.</div>
   </section>
 
   <section>
     <h2>Education</h2>
     <div class="row">
       <div class="dt" style="min-width:118px;">S.Kom., Informatics</div>
-      <div><b>Universitas Jenderal Ahmad Yani (UNJANI), Cimahi</b> &nbsp;&middot;&nbsp; graduated August 2017.</div>
+      <div><b>Universitas Jenderal Achmad Yani (UNJANI), Cimahi</b> &nbsp;&middot;&nbsp; graduated August 2017.</div>
     </div>
   </section>
 
   <section>
     <h2>Technical Skills</h2>
-    <div class="skill-line"><span class="k">Frontend:</span><span class="v">React (16 to 19) &middot; Next.js 16 (App Router) &middot; TypeScript &middot; Redux &middot; Tailwind CSS &middot; shadcn/ui &middot; Vue 2 / Nuxt 2 &middot; Webpack &middot; state management &middot; design-systems-driven UI</span></div>
-    <div class="skill-line"><span class="k">Media &amp; realtime:</span><span class="v">Web Media APIs &middot; WebRTC &middot; Socket.IO &middot; resumable upload &middot; offline / weak-network resilience &middot; cross-browser testing</span></div>
-    <div class="skill-line"><span class="k">Testing &amp; quality:</span><span class="v">Cypress E2E &middot; no-mock E2E policy &middot; responsive &middot; accessibility-aware markup &middot; performance budgets</span></div>
-    <div class="skill-line"><span class="k">Languages:</span><span class="v">TypeScript &middot; JavaScript (ES6+) &middot; PHP &middot; Python &middot; SQL</span></div>
-    <div class="skill-line"><span class="k">Product &amp; process:</span><span class="v">product specification (PRD / design use cases) &middot; Jira &middot; Git &middot; code review &middot; AI SDKs (Anthropic, OpenAI, Gemini) in the UI</span></div>
+    <div class="skill-line"><span class="k">Frontend &amp; CSS:</span><span class="v">TypeScript &middot; JavaScript (ES6+) &middot; React (16 to 19) &middot; Next.js 16 &middot; Redux &middot; AngularJS / Ionic &middot; Vue 2 / Nuxt 2 &middot; Tailwind CSS &middot; Sass &middot; shadcn/ui &middot; Webpack</span></div>
+    <div class="skill-line"><span class="k">Media &amp; realtime:</span><span class="v">Web Media APIs &middot; WebRTC &middot; Socket.IO &middot; resumable upload &middot; offline / weak-network resilience</span></div>
+    <div class="skill-line"><span class="k">Testing &amp; quality:</span><span class="v">Cypress E2E &middot; no-mock E2E policy &middot; accessibility-aware markup &middot; performance budgets</span></div>
+    <div class="skill-line"><span class="k">Delivery &amp; cloud:</span><span class="v">Azure DevOps pipelines (CI/CD) &middot; per-environment builds &middot; Docker &middot; PM2 &middot; Azure Blob / AWS S3</span></div>
+    <div class="skill-line"><span class="k">Practice &amp; process:</span><span class="v">OOP &middot; SOLID &middot; design patterns &middot; code review &middot; Agile delivery (Jira, Confluence) &middot; product specification (19 PRDs, 30 design use cases) &middot; PHP / Python / SQL &middot; Git</span></div>
   </section>
 
   <p class="proof">All figures traceable to the git commit history behind them. References and the full track record available on request.</p>
