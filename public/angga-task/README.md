@@ -118,8 +118,8 @@ Sempat kelewat: ikon tab masih **segitiga Vercel** meski `public/favicon.svg` su
 
 Revisi dari CV 2026 utama setelah dibaca ulang dari kacamata recruiter yang punya 20–30 detik untuk memutuskan shortlist. Masalah yang disasar bukan kurang pengalaman, tapi **positioning yang melebar**: terlalu banyak hal masuk sekaligus, dan angka impact terbesar baru ketemu setelah membaca beberapa paragraf.
 
-- **File baru:** `Angga_Kersana_Munggaran_CV_SeniorFullstack_2026.{html,pdf}`, 2 halaman A4. **CV 2026 di root TIDAK diubah** dan `personalInfo.resumeUrl` sengaja tidak dialihkan, jadi situs masih menyajikan versi lama sampai kamu memutuskan.
-- **Yang naik ke halaman pertama:** strip 4 metrik impact di bawah header (2.500 concurrent / 92% bundle / 18 feature areas dalam 6 bulan / 0 downtime AWS→Azure), lalu tagline tiga baris sinyal berurutan: role → tahun → stack.
+- **File baru:** `Angga_Kersana_Munggaran_CV_SeniorFullstack_2026.{html,pdf}`, 2 halaman A4. **CV 2026 di root TIDAK diubah.** ⚠️ **Diperbarui:** `personalInfo.resumeUrl` akhirnya dialihkan ke CV ini, jadi situs menyajikan versi baru, bukan versi lama.
+- **Yang naik ke halaman pertama:** strip 4 metrik impact di bawah header (2.500 concurrent / 92% bundle / 18 feature areas dalam 6 bulan / 0 downtime migrasi dual-database), lalu tagline tiga baris sinyal berurutan: role → tahun → stack.
 - **Yang turun:** angka aktivitas (11.700 commits, 35 repositori, 1.661 tiket Jira, 93%) pindah dari context line ASTRNT ke baris footer bukti. Alasannya: itu activity metric, bukan outcome metric, dan sebagai headline memancing pertanyaan "so what?".
 - **ASTRNT dipadatkan 15 bullet → 8 bullet**, kata kerja divariasikan (Led / Diagnosed / Designed / Engineered / Built / Migrated / Scaled / Owned) supaya tidak monoton "Built". Paragraf pembelaan histori commit dihapus.
 - **Skills disusun bertingkat:** Core / Working knowledge / Additional / Specialist, menggantikan 9 baris kategori. Keyword ATS-nya hampir semua tetap ada. Satu perubahan CSS lokal: `.skill-line` jadi flex supaya nilai yang wrap sejajar dengan kolom nilai, bukan kembali ke margin kiri.
@@ -156,6 +156,19 @@ Fokus putaran ini **bukan menambah isi**, tapi menata ulang hierarki visual supa
 - **GPA 3.13 dihapus dari Education.** Tujuh tahun setelah lulus, GPA tidak lagi membantu positioning senior; yang tersisa: `S.Kom., Informatics` + universitas + tahun lulus + baris konsentrasi AI and Data Mining.
 - **Yang sengaja TIDAK dilakukan:** menambah pengalaman, bullet, atau klaim baru untuk mengisi halaman 2. Hasil akhir tetap 2 halaman A4 dengan halaman 2 terisi sekitar setengah.
 - **Verifikasi putaran ini:** 2 halaman (dicek lewat ghostscript `pdfpagecount`, karena grep `/Type /Pages` gagal pada PDF yang object stream-nya terkompresi), 0 em-dash, semua keyword ATS dari CV root masih ada (audit grep 35 keyword: Tableau, web scraping, NestJS, Prisma, Kubernetes, Elasticsearch, DynamoDB, C# / .NET, Cypress, FFmpeg, WebRTC, Stripe, Midtrans, Azure Speech, TensorFlow, VRA, Confluence, Azure DevOps, PM2, MediaRecorder, shadcn, AngularJS, CodeIgniter, Lumen, Flask, MongoDB, Nuxt, dll), dan CV root + `src/data/portfolio.ts` terkonfirmasi tidak tersentuh (`git diff --stat` kosong).
+
+#### Koreksi fakta: "0 downtime" milik migrasi dual-database, bukan AWS→Azure (2026-09-16)
+
+Koreksi dari Angga setelah CV-nya dibaca ulang. **Klaim "0 downtime" selama ini ditempelkan ke migrasi AWS → Azure, dan itu salah.** Yang benar: nol downtime itu terjadi pada **migrasi database ke arsitektur baru**, yang dijalankan dengan **dual-database store write** sehingga fitur yang sudah berjalan di produksi tidak terganggu selama arsitektur barunya dibangun.
+
+- **Strip metrik diperbaiki:** `0` sekarang berbunyi "downtime during the dual-database migration to the new architecture", bukan "during the AWS to Azure migration".
+- **Bullet Cloud migration kehilangan klaimnya:** frasa "as a zero-downtime move" dihapus dari bullet AWS → Azure. Isi bullet lainnya tidak berubah.
+- **Bullet Architecture & scalability dibuat eksplisit** soal mekanismenya: "running both schemas on **dual writes** so data moved between them with no cut-over outage and no disruption to features already in production". Sebelumnya cuma bilang "no cut-over outage" tanpa menyebut dual write, jadi pembacanya tidak tahu kenapa ia bisa tanpa downtime.
+- ⚠️ **Klaim yang sama masih ada di tempat lain dan BELUM diperbaiki.** Kalau menyentuh area ini lagi, perbaiki juga:
+  - **`src/components/sections/ForYourBusiness.tsx:26`** (situs publik, kartu "Scale and migrate without downtime"): "When the company consolidated onto Azure, I carried the platform across, moving object and video storage to Azure Blob and the activity log from DynamoDB to MongoDB, **with no service downtime**." Ini atribusi yang sama-sama keliru. Judul kartunya sendiri ("Scale and migrate without downtime") ikut terdampak karena mencampur scaling, migrasi, dan downtime jadi satu kalimat.
+  - **Catatan lamaran di `public/angga-task/apply-to/`** (privat, tidak ada di branch ini): beberapa file menulis "migrasi AWS ke Azure tanpa downtime" sebagai bukti kompetensi cloud. Klaim itu perlu dikoreksi sebelum dipakai lagi.
+- **CV 2026 root dan halaman `/career` bersih:** keduanya tidak pernah mengklaim zero-downtime untuk AWS → Azure. Root CV cuma menulis "Led the AWS to Azure cloud migration for the company's infrastructure consolidation."
+- **Pelajaran untuk ke depan:** klaim "tanpa downtime" itu spesifik pada satu peristiwa. Jangan dipindah ke peristiwa lain yang mirip hanya karena keduanya sama-sama disebut "migrasi".
 
 ## 4. Konvensi & Constraint Penting
 

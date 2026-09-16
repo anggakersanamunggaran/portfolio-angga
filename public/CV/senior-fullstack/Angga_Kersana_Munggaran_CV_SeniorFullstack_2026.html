@@ -101,7 +101,7 @@
     <div class="metric"><b>2,500</b><span>concurrent candidates, production scalability incident diagnosed and resolved</span></div>
     <div class="metric"><b>92%</b><span>smaller front-end bundle after code splitting and a dependency audit</span></div>
     <div class="metric"><b>18</b><span>feature areas shipped in six months on the flagship platform rebuild</span></div>
-    <div class="metric"><b>0</b><span>downtime during the AWS to Azure migration</span></div>
+    <div class="metric"><b>0</b><span>downtime during the dual-database migration to the new architecture</span></div>
   </div>
 
   <!-- ===================== PROFILE ===================== -->
@@ -147,9 +147,9 @@
         <div class="group-head">Architecture &amp; scalability</div>
         <ul>
           <li>
-            <b class="lead">Architected the dual-database migration behind the rebuild,</b> so data moved between the old
-            and new schemas with <b>no cut-over outage</b> and per-company control. Tracked feature parity against V1 so
-            completeness was auditable rather than assumed.
+            <b class="lead">Architected the dual-database migration behind the rebuild,</b> running both schemas on
+            <b>dual writes</b> so data moved between them with <b>no cut-over outage</b> and no disruption to features
+            already in production. Tracked feature parity against V1 so completeness was auditable rather than assumed.
           </li>
           <li>
             <b class="lead">Diagnosed and resolved a production scalability incident at 2,500 concurrent candidates,</b>
@@ -176,7 +176,7 @@
         <div class="group-head">Cloud migration</div>
         <ul>
           <li>
-            <b class="lead">Migrated the company&rsquo;s infrastructure from AWS to Azure</b> as a zero-downtime move:
+            <b class="lead">Migrated the company&rsquo;s infrastructure from AWS to Azure:</b>
             per-environment production builds, PM2 process configuration, and re-homing the data Azure has no direct
             equivalent for, object and video storage onto <b>Azure Blob</b> and the <b>DynamoDB activity log onto
             MongoDB</b>. Ran the Laravel 5.4 to 5.8 and PHP 7.1 to 7.4 upgrade as a parallel track, so the live monolith
