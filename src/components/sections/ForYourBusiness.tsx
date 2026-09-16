@@ -22,8 +22,8 @@ const offerings = [
   },
   {
     icon: Cloud,
-    title: "Scale and migrate without downtime",
-    body: "When 2,500 candidates hit the platform at once and the database saturated, I traced it and fixed it. When the company consolidated onto Azure, I carried the platform across, moving object and video storage to Azure Blob and the activity log from DynamoDB to MongoDB, with no service downtime.",
+    title: "Scale and migrate successfully",
+    body: "When 2,500 candidates hit the platform at once and the database saturated, I traced it and fixed it. When the company consolidated onto Azure, I carried the platform across, moving object and video storage to Azure Blob and the activity log from DynamoDB to MongoDB, successfully.",
   },
 ] as const;
 
