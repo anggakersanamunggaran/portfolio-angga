@@ -169,6 +169,40 @@ Koreksi dari Angga setelah CV-nya dibaca ulang. **Klaim "0 downtime" selama ini 
 - **CV 2026 root dan halaman `/career` bersih:** keduanya tidak pernah mengklaim zero-downtime untuk AWS → Azure. Root CV cuma menulis "Led the AWS to Azure cloud migration for the company's infrastructure consolidation."
 - **Pelajaran untuk ke depan:** klaim "tanpa downtime" itu spesifik pada satu peristiwa. Jangan dipindah ke peristiwa lain yang mirip hanya karena keduanya sama-sama disebut "migrasi".
 
+#### Durasi tahun di baris Core engineering (2026-09-16)
+
+Masalah yang diangkat Angga: **Technical Skills cuma daftar flat tanpa durasi**, jadi recruiter harus menyimpulkan sendiri dari narasi di atas, dan itu gampang kelewat saat scan cepat. "React 19" disebut di bullet, tapi sejak kapan React dipakai tidak eksplisit di mana pun.
+
+Yang ditambahkan: estimasi tahun **hanya di baris Core engineering**, tidak di 30+ item. Baris Domain & systems, Working knowledge, dan Additional sengaja dibiarkan tanpa durasi, karena levelnya memang "familiar", bukan core expertise.
+
+```
+Core engineering: TypeScript (2 yrs) · JavaScript (ES6+) · React ecosystem, v16 → Next.js 16 (7 yrs) ·
+                  Node.js / Express (5+ yrs) · PHP / Laravel (9 yrs) · MySQL (9 yrs) ·
+                  PostgreSQL · REST API · AWS / Azure (6 yrs)
+```
+
+**Cara angka itu diturunkan** (semuanya dari tanggal kerja yang sudah ada di CV ini, bukan perkiraan baru):
+
+| Skill | Sumber | Rentang |
+|---|---|---|
+| React | Recruiter platform + candidate app ASTRNT 2019–2026, langgan.id 2019 | 7 yrs |
+| PHP / Laravel | Cihanjuang 2016, Galamedia 2016–2017, ASTRNT 2019–2026 | 9 yrs |
+| MySQL | Era Laravel 2016–2026 | 9 yrs |
+| Node.js / Express | Public web ASTRNT 2019–2026, migrasi cloud 2020 (Node + PM2) | 5+ yrs |
+| AWS / Azure | S3 di recruiter platform 2019–2026; Azure sejak migrasi 2020 | 6 yrs (batas bawah keduanya) |
+| TypeScript | `ezreturn-fe` 2025, Dashboard V2 2026 | 2 yrs |
+| Next.js | Dashboard V2 2026 + situs ini | 1 yr |
+| PostgreSQL | `ShopeeMonitor` 2026, Prisma di Dashboard V2 | 2 yrs |
+
+- **Yang ditolak: usulan awal "React / Next.js / TypeScript (6+ yrs)".** 7 tahun itu milik React; Next.js dan TypeScript baru masuk di generasi terakhir. Menggabungkannya akan meminjamkan durasi React ke dua skill yang belum selama itu, persis kesalahan yang sama seperti kasus "0 downtime" di atas.
+- **Solusi yang dipilih Angga:** React dan Next.js digabung jadi satu label **ekosistem** ("React ecosystem, v16 → Next.js 16 (7 yrs)"), jadi 7 tahun itu eksplisit milik React dan Next.js ikut sebagai ekosistem yang sama, bukan diklaim setara. TypeScript tetap terpisah dan jujur di 2 yrs.
+- **PostgreSQL tidak diberi tahun** meski ada di baris Core, karena rentangnya pendek. MySQL yang diberi tahun, dan urutannya dibalik jadi `MySQL (9 yrs) · PostgreSQL` supaya angka 9 tidak menempel ke PostgreSQL.
+- **Kata "Laravel" masih utuh untuk ATS**, sekarang jadi `PHP / Laravel`. Tidak ada keyword ATS yang hilang dari baris ini.
+- ⚠️ **Catatan lamaran yang perlu dikoreksi:** `public/angga-task/apply-to/zero-one-group/job.md` menulis "TypeScript/JavaScript sejak 2019". Itu benar untuk JavaScript, **salah untuk TypeScript**. Belum disentuh (file privat, keputusan Angga).
+- **Konsekuensi yang perlu disadari:** tagline header tetap "7+ years" (mengacu ke masa B2B SaaS di ASTRNT) sementara baris skill menulis Laravel 9 yrs. Keduanya benar untuk lingkup masing-masing, tapi kalau mau diseragamkan, itu keputusan terpisah.
+
+**Verifikasi putaran ini:** 2 halaman (ghostscript `pdfpagecount`), 0 em-dash, cek visual PDF halaman 2 (baris skill wrap jadi 2 baris, tidak ada heading orphan, tidak ada bullet terpotong).
+
 ## 4. Konvensi & Constraint Penting
 
 - **File personal TIDAK pernah di-commit/di-push** (repo public): `screening-answer.md` (root), `public/angga-task/apply-to/` (email, cover letter, tracker lamaran), `public/angga-task/signature-gmail-preview.html`. Sudah masuk `.gitignore` (2026-09-04).
