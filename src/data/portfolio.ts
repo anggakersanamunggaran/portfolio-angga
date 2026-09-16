@@ -83,7 +83,7 @@ export const personalInfo = {
   location: "Indonesia",
   email: "anggakersana@gmail.com",
   whatsapp: "6281324230307",
-  resumeUrl: "/CV/Angga_Kersana_Munggaran_CV_2026.pdf",
+  resumeUrl: "/CV/senior-fullstack/Angga_Kersana_Munggaran_CV_SeniorFullstack_2026.pdf",
   socials: [
     {
       name: "GitHub",

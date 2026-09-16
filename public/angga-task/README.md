@@ -1,7 +1,7 @@
 # Portfolio Angga — Catatan Konteks & Log Perubahan
 
 > File ini dibuat agar kalau mau update website portfolio nanti, kamu (atau AI yang bantu) langsung paham konteks: apa yang sudah dikerjakan, di file mana, dengan prinsip/format apa.
-> Terakhir diperbarui: **2026-09-15**.
+> Terakhir diperbarui: **2026-09-16**.
 
 ---
 
@@ -113,6 +113,49 @@ Sempat kelewat: ikon tab masih **segitiga Vercel** meski `public/favicon.svg` su
 - `opengraph-image.tsx` sekarang membaca `public/avatar.jpg` **dari disk**, bukan fetch ke domain sendiri seperti sebelumnya (dulu kalau fetch gagal, avatar hilang diam-diam).
 - File scaffolding bawaan Next yang tidak terpakai sudah dihapus: `public/next.svg`, `vercel.svg`, `file.svg`, `globe.svg`, `window.svg`, `favicon.svg`.
 - Kalau mau ganti crop fotonya: ubah nilai `CROP` (fraksi `left`/`top`/`size`) di skrip pembuat ikon, lalu render ulang ketiga ukuran itu.
+
+### CV versi Senior Full-Stack — `public/CV/senior-fullstack/` (2026-09-16)
+
+Revisi dari CV 2026 utama setelah dibaca ulang dari kacamata recruiter yang punya 20–30 detik untuk memutuskan shortlist. Masalah yang disasar bukan kurang pengalaman, tapi **positioning yang melebar**: terlalu banyak hal masuk sekaligus, dan angka impact terbesar baru ketemu setelah membaca beberapa paragraf.
+
+- **File baru:** `Angga_Kersana_Munggaran_CV_SeniorFullstack_2026.{html,pdf}`, 2 halaman A4. **CV 2026 di root TIDAK diubah** dan `personalInfo.resumeUrl` sengaja tidak dialihkan, jadi situs masih menyajikan versi lama sampai kamu memutuskan.
+- **Yang naik ke halaman pertama:** strip 4 metrik impact di bawah header (2.500 concurrent / 92% bundle / 18 feature areas dalam 6 bulan / 0 downtime AWS→Azure), lalu tagline tiga baris sinyal berurutan: role → tahun → stack.
+- **Yang turun:** angka aktivitas (11.700 commits, 35 repositori, 1.661 tiket Jira, 93%) pindah dari context line ASTRNT ke baris footer bukti. Alasannya: itu activity metric, bukan outcome metric, dan sebagai headline memancing pertanyaan "so what?".
+- **ASTRNT dipadatkan 15 bullet → 8 bullet**, kata kerja divariasikan (Led / Diagnosed / Designed / Engineered / Built / Migrated / Scaled / Owned) supaya tidak monoton "Built". Paragraf pembelaan histori commit dihapus.
+- **Skills disusun bertingkat:** Core / Working knowledge / Additional / Specialist, menggantikan 9 baris kategori. Keyword ATS-nya hampir semua tetap ada. Satu perubahan CSS lokal: `.skill-line` jadi flex supaya nilai yang wrap sejajar dengan kolom nilai, bukan kembali ke margin kiri.
+- ⚠️ **Angka 2.500 itu titik insiden, bukan kapasitas.** Karena ia naik jadi headline, labelnya harus jujur: "production scalability incident diagnosed and resolved", bukan ditulis polos sebagai klaim kapasitas.
+- ⚠️ **`C# / .NET` sekarang tertulis** (di tier Additional) supaya lolos string ATS ".NET". Ini **tidak** mengubah batas klaim yang lama: .NET Core services, Entity Framework, NATS, dan Quarkus tetap tidak diklaim.
+- **Menyimpang dari feedback, atas permintaan Angga:** TOEFL ITP 500 dan GPA 3.13 **tetap** ada; yang dihapus cuma baris Kaderisasi UNJANI dan detail tesis di Education (tesis sudah terwakili paper SNATI 2017 di Awards). ⚠️ **Dibatalkan di putaran ketiga:** keduanya akhirnya dihapus.
+- **Klaim QnA jadi kualitatif** ("the largest codebase I owned") tanpa angka commit. Ini sekaligus menghilangkan konflik lama: `portfolio.ts` menulis ~1.300 commits sementara CV dan LinkedIn menulis ~2.200, dan dua sumber itu memang tidak pernah sinkron.
+- **Cara render & verifikasi:** sama seperti CV lain (headless Chrome). Untuk menghitung halaman pakai ghostscript: `gs -q -dNODISPLAY -dNOSAFER -c "(file.pdf) (r) file runpdfbegin pdfpagecount = quit"`. Cara lama (grep `/Type /Pages` lalu `/Count N`) **tidak lagi bisa diandalkan**: PDF keluaran Chrome sekarang mengompresi object stream, jadi `/Type /Pages` tidak muncul sebagai teks polos. Untuk inspeksi visual, `gs -sDEVICE=png16m -r110 -o out%d.png file.pdf` (ghostscript ada di mesin ini) lebih akurat daripada screenshot HTML, karena yang dilihat benar-benar layout cetaknya. Catatan: teks PDF tidak bisa diekstrak (`pdftotext`/`pypdf` tidak terpasang, dan font di-subset dengan encoding glyph kustom), jadi verifikasi isi selalu lewat rasterisasi + baca PNG.
+
+#### Putaran polishing (masih 2026-09-16)
+
+Review recruiter kedua menilai versi ini 8.8/10 dan menyebutnya sudah masuk fase **polishing, bukan rebuilding**. Yang tetap dipertahankan: headline, strip metrik, positioning, hierarki stack, format 2 halaman.
+
+- **Profile dipotong ~30% dan diubah jadi impersonal.** Sebelumnya tiga kalimat mengulang ide yang sama (spec → implementasi → produksi) dan memakai "I write..." yang terlalu conversational untuk CV internasional. Sekarang satu pernyataan kuat: "Owns features end to end, from product specification through implementation and production operations."
+- **ASTRNT sekarang bertingkat, bukan 9 bullet berbobot sama.** 5 bullet Tier 1 (modernisasi Next.js, migrasi dual-database, insiden 2.500 concurrent, exam-integrity + media, AWS → Azure), lalu label **"Also delivered"** dengan 5 bullet berbobot penuh (CV/AI pipeline, QnA, multi-product & enterprise, job-market ingestion, product definition). Container-nya class `.also` di file ini, sengaja tidak ada di CV root. ⚠️ **Diganti di putaran ketiga** oleh sub-heading tematik (class `.group`), lihat di bawah.
+- **Label skill diubah:** "Specialist" diganti **"Domain & systems"** (kata "specialist" terbaca sebagai klaim subjektif) dan **dinaikkan ke posisi 2** supaya bagian paling unik tidak terkubur. Urutan sekarang: Core engineering / Domain & systems / Working knowledge / Additional.
+- **Semua angka activity dihapus dari footer** (11.700 commits, 35 repositori, 1.661 tiket, 93%, 335 reported). Barisnya sekarang: "All figures traceable to primary sources." Frasa "git commit history" diganti "primary sources" karena angka yang tersisa di body (2.500, 92%, 18) tidak semuanya berasal dari git.
+- **Headline stack**: MySQL dikeluarkan, urutannya jadi `... PostgreSQL · AWS · Azure`, supaya AWS/Azure yang menempel di ujung dan memperkuat sinyal system ownership. MySQL tetap ada di tier Core engineering.
+- **TOEFL dan GPA tetap** (lagi-lagi diminta hapus oleh feedback, lagi-lagi dipertahankan Angga). ⚠️ **Dibatalkan di putaran ketiga.**
+- ⚠️ **Dua keyword ATS sempat hilang** saat memadatkan Tier 2 dan sudah dikembalikan: **Tableau** (kembali sebagai "a Tableau BI connector") dan **web scraping** (kembali sebagai grup "Data ingestion and web scraping" di tier Domain & systems). Kalau memadatkan lagi, cek dulu keyword ini tidak ikut terbuang.
+- **Klaim QnA tetap kualitatif** ("the largest codebase I owned"), tidak memakai angka. Feedback menyarankan menulis "2,200+ commits", tapi angka itu belum pernah direkonsiliasi dengan `portfolio.ts` yang menulis ~1.300. **Rekonsiliasi ini masih utang** dan menyangkut juga kartu project di website.
+- **Keputusan akhir layout: Option B.** Kelima item "Also delivered" dinaikkan jadi bullet berbobot penuh dengan label pendek agar mudah di-scan, **tanpa menambah informasi baru**. Halaman 1 sekarang terisi sampai bawah; halaman 2 terisi sekitar setengah. Keputusan sadar: white space di halaman 2 lebih dipilih daripada memaksa penuh. Yang **sengaja tidak** diperpanjang: Galamedia, Wahana Saabiq, Cihanjuang, karena menambah detail di sana hanya menarik perhatian dari ASTRNT.
+
+#### Putaran ketiga: restrukturisasi hierarki (masih 2026-09-16)
+
+Fokus putaran ini **bukan menambah isi**, tapi menata ulang hierarki visual supaya kekuatan yang sudah ada lebih cepat ditemukan recruiter. Angga eksplisit menolak mengisi halaman 2 hanya karena masih ada ruang: "Ada ruang kosong → tambahkan bullet" bukan alasan yang sah.
+
+- **Urutan section diubah** menjadi: Header → strip metrik impact → Profile → Professional Experience → **Technical Skills** → Education → **Awards & Research**. Sebelumnya Skills ada di paling bawah, setelah Education. Untuk target Senior Full-Stack, skill adalah sinyal kedua terkuat setelah experience, jadi ia naik dan Education/Awards turun ke bawah.
+- **"Also delivered" diganti "Selected engineering & product work"** dan tetap 5 bullet berbobot penuh. Label lama terdengar seperti lampiran; label baru menyatakan bahwa ini portofolio kerja yang dipilih, bukan sisa.
+- **ASTRNT sekarang punya 4 sub-heading tematik** (class `.group` + `.group-head`, warna aksen, uppercase, huruf kecil) yang mengelompokkan 5 bullet Tier 1: **Platform modernisation** (modernisasi Next.js + 18 feature areas + 92% bundle), **Architecture & scalability** (migrasi dual-database + insiden 2.500 concurrent), **Media & exam integrity**, **Cloud migration** (AWS → Azure). Sub-heading ini murni scaffolding visual: **tidak ada bullet baru, tidak ada klaim baru**, isinya persis sama. Efeknya recruiter bisa menemukan "Architecture & scalability" dalam sekali scan tanpa membaca kelima bullet.
+- **CSS `.also` / `.also-head` dihapus**, diganti `.group` / `.group-head` (di file ini saja, bukan di CV root). Keduanya dapat `page-break-inside:avoid` pada `.group` dan `page-break-after:avoid` pada `.group-head` supaya heading tidak pernah terpisah dari bullet pertamanya.
+- **Awards dipadatkan 4 baris → 2 baris** dan judulnya jadi **"Awards & Research"** (kata "Achievements" berlebihan untuk dua penghargaan internal). Dua penghargaan ASTRNT digabung jadi satu baris dengan **dua link sertifikat terpisah** (2025 certificate / 2026 certificate); paper SNATI 2017 tetap satu baris sendiri dengan link publikasinya.
+- **TOEFL ITP 500 dihapus.** Dibatalkan dari dua putaran sebelumnya setelah review ketiga menegaskannya lagi: skor 500 di bawah ambang yang recruiter internasional anggap relevan, jadi ia hanya memakan ruang tanpa menambah sinyal.
+- **GPA 3.13 dihapus dari Education.** Tujuh tahun setelah lulus, GPA tidak lagi membantu positioning senior; yang tersisa: `S.Kom., Informatics` + universitas + tahun lulus + baris konsentrasi AI and Data Mining.
+- **Yang sengaja TIDAK dilakukan:** menambah pengalaman, bullet, atau klaim baru untuk mengisi halaman 2. Hasil akhir tetap 2 halaman A4 dengan halaman 2 terisi sekitar setengah.
+- **Verifikasi putaran ini:** 2 halaman (dicek lewat ghostscript `pdfpagecount`, karena grep `/Type /Pages` gagal pada PDF yang object stream-nya terkompresi), 0 em-dash, semua keyword ATS dari CV root masih ada (audit grep 35 keyword: Tableau, web scraping, NestJS, Prisma, Kubernetes, Elasticsearch, DynamoDB, C# / .NET, Cypress, FFmpeg, WebRTC, Stripe, Midtrans, Azure Speech, TensorFlow, VRA, Confluence, Azure DevOps, PM2, MediaRecorder, shadcn, AngularJS, CodeIgniter, Lumen, Flask, MongoDB, Nuxt, dll), dan CV root + `src/data/portfolio.ts` terkonfirmasi tidak tersentuh (`git diff --stat` kosong).
 
 ## 4. Konvensi & Constraint Penting
 
