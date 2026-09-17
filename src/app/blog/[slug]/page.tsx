@@ -32,13 +32,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: post.excerpt,
       publishedTime: post.date,
       tags: post.tags,
-      images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
     },
+    /*
+     * No `images` here on purpose. A config-based image overrides the
+     * file-based one, so naming the generic card here is what used to make
+     * every post share the same preview. The card now comes from
+     * `./opengraph-image.tsx`, which is per-post and also fills twitter:image.
+     */
     twitter: {
       card: "summary_large_image",
       title: fullTitle,
       description: post.excerpt,
-      images: ["/opengraph-image"],
     },
   };
 }

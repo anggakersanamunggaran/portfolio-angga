@@ -19,13 +19,16 @@ export const metadata: Metadata = {
     siteName: "Angga Kersana Munggaran",
     title: `${title} — Angga Kersana Munggaran`,
     description,
-    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
+  /*
+   * The card is the file convention at `./opengraph-image.tsx`. Naming one
+   * here would override it and put the personal card back on a shared /blog
+   * link.
+   */
   twitter: {
     card: "summary_large_image",
     title: `${title} — Angga Kersana Munggaran`,
     description,
-    images: ["/opengraph-image"],
   },
 };
 

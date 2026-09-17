@@ -89,6 +89,20 @@ Konten blog ada di **`src/data/posts.ts`** (bukan markdown, sengaja: biar tidak 
 - ⚠️ **Repo GitHub ini PUBLIC.** Karena itu semua bahan lamaran personal (email, cover letter, tracker, signature, no. HP, foto) **tidak di-commit/di-push** ke `main`. File di-gitignore (lihat `.gitignore`). Backup/akses dari mana saja pakai tempat privat (Drive pribadi / repo privat), bukan repo ini.
   - **Pengecualian sadar (2026-09-17): aset gambar signature.** `public/signature/` (1 foto + 4 ikon) **di-commit ke `main`** supaya bisa diambil penerima email lewat HTTPS. Signature HTML-nya sendiri tetap hanya di `apply`. Lihat `public/signature/README.md`.
 
+### Kartu OG per-post + kartu `/blog` (2026-09-17)
+
+Sebelum ini **kedua post blog memakai kartu OG yang sama persis** (`src/app/opengraph-image.tsx`, kartu nama + proof strip). Jadi saat link dibagikan ke LinkedIn, post signature dan post desain situs tampil identik dan tidak ada yang bisa diintip sebelum klik.
+
+- **File baru:** `src/app/blog/[slug]/opengraph-image.tsx` (kartu per-post) dan `src/app/blog/opengraph-image.tsx` (kartu daftar `/blog`, isinya 3 tulisan terbaru). Gaya kartu mengikuti kartu root: latar hitam, penanda kotak, hairline, micro-label ber-tracking lebar.
+- ⚠️ **Temuan yang menentukan: config menang atas file convention.** `generateMetadata` di `blog/[slug]/page.tsx` dan `blog/page.tsx` sama-sama menulis `images: ["/opengraph-image"]`. Buktinya dari situs ini sendiri: `/` (tanpa `images`) menghasilkan `og:image:type` + URL ber-hash dari file convention, sedangkan `/blog/[slug]` (dengan `images`) menghasilkan URL polos **tanpa** `og:image:type`. Artinya kartu baru **tidak akan terpakai** selama array itu masih ada. **Array `images` di kedua file itu sudah dihapus**, dan komentar kenapa ada di tempatnya.
+- `opengraph-image.tsx` juga mengisi `twitter:image`, jadi tidak perlu file `twitter-image.tsx` terpisah (terbukti: `/` mengisi `twitter:image` padahal `layout.tsx` tidak punya `twitter.images`).
+- **Font tetap bawaan satori.** Serif italic khas situs tidak bisa dipakai: `next/font` menyimpan font ke build cache dengan nama ber-hash, dan tidak ada file font di repo. `accent` dibedakan lewat **warna abu-abu**, bukan serif. Ini kompromi yang sama dengan kartu root, dan Angga memilih tidak menambah file font.
+- **Pemotongan teks dihitung di JS, bukan CSS** (`line-clamp` tidak reliable di satori). Aturan excerpt: kalau ada kalimat yang selesai di dalam 150 karakter, **ambil kalimat itu utuh** dan berhenti; kalau tidak, potong di batas kata. Draf pertama memotong buta di 150 karakter dan hasilnya klausa terputus ("the fix came down to deciding where…") yang terbaca buruk saat dirender. Sekarang jadi "The signature contained no files at all, yet Gmail counted five attachments." yaitu kalimat pembuka yang utuh.
+- Tanggal di kartu `/blog` diformat manual, bukan lewat `Intl`, supaya bentuknya tidak berubah mengikuti locale mesin build.
+- **`src/app/opengraph-image.tsx` (root) tidak disentuh.** Tetap melayani `/`, `/career`, dan halaman yang tidak punya kartu sendiri.
+- **Verifikasi:** build lulus dan kedua kartu per-post ter-prerender (`● SSG`); empat kartu (root, /blog, 2 post) md5-nya semua berbeda, 1200×630 PNG; `/` dan `/career` tetap ke `/opengraph-image`; semua URL absolut `https`; keempat kartunya dirender jadi PNG dan **dilihat langsung**, bukan cuma dipercaya dari build yang lulus.
+- ⚠️ **Cache LinkedIn.** Kalau kartu lama masih muncul setelah deploy, itu cache LinkedIn, bukan bug. Refresh lewat `linkedin.com/post-inspector`.
+
 ### Post blog: "One signature, five attachments" (2026-09-17)
 
 Post kedua di `/blog` (`email-signature-without-attachments`), Bahasa Inggris. Menceritakan cara membangun signature email yang efisien: gejala 5 attachment, kenapa base64 ditolak, opsi hosting gambar, hasil uji Google Drive, apa yang dilakukan client terhadap markup, dan bagian yang tidak ada di HTML sama sekali (Mobile Signature Gmail).
