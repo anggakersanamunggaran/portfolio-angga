@@ -87,6 +87,13 @@ Konten blog ada di **`src/data/posts.ts`** (bukan markdown, sengaja: biar tidak 
 - **`apply-to/` = tracker lamaran lokal** (`README.md` punya tabel status + legenda; `_template/` untuk lamaran baru; tiap lamaran = 1 folder: `email.md`, `cover-letter.md`, `job.md`).
 - **Signature Gmail** dibuat sebagai asset lokal `public/angga-task/signature-gmail-preview.html` (foto profil + WA/Gmail/Portfolio/LinkedIn/GitHub + quote bisnis). Copy-paste isinya ke Gmail → Settings → Signature.
 - ⚠️ **Repo GitHub ini PUBLIC.** Karena itu semua bahan lamaran personal (email, cover letter, tracker, signature, no. HP, foto) **tidak di-commit/di-push** ke `main`. File di-gitignore (lihat `.gitignore`). Backup/akses dari mana saja pakai tempat privat (Drive pribadi / repo privat), bukan repo ini.
+  - **Pengecualian sadar (2026-09-17): aset gambar signature.** `public/signature/` (1 foto + 4 ikon) **di-commit ke `main`** supaya bisa diambil penerima email lewat HTTPS. Signature HTML-nya sendiri tetap hanya di `apply`. Lihat `public/signature/README.md`.
+
+### Perbaikan Signature Gmail: Base64 → HTTPS (2026-09-17)
+- **Masalah:** signature menampilkan **"5 Attachments"** di Gmail, terutama di mobile. Penyebabnya 5 gambar ditulis sebagai `data:image/...;base64` di dalam HTML; Gmail mengubah data URI di body compose menjadi **inline attachment**.
+- **Solusi:** kelima gambar diekstrak ke `public/signature/` dan di-commit ke `main` (ter-deploy di `anggakersana-dev.vercel.app`), lalu semua `src` di HTML signature diganti URL HTTPS. Desain tidak berubah: foto tetap bulat 84×84, keempat ikon tetap 18×18 dan tetap clickable.
+- Sekalian diperbaiki: karakter `any` nyasar di awal file, atribut `border="0"` pada ikon (Outlook lama suka menambah border biru), dan `bgcolor="#ffffff"` pada tabel (Outlook mengabaikan background CSS).
+- **Konsekuensi yang perlu diketahui:** gambar eksternal bisa diblokir client penerima sampai mereka klik "Display images". Ini tetap jauh lebih baik daripada muncul sebagai attachment.
 
 ### Restyle total ke bahasa visual monokrom/editorial + halaman Blog (2026-09-15)
 
