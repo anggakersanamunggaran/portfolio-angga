@@ -232,6 +232,162 @@ getComputedStyle(h1).fontSize  // did clamp() resolve as intended?`,
       },
     ],
   },
+
+  {
+    slug: "email-signature-without-attachments",
+    title: "One signature,",
+    accent: "five attachments",
+    date: "2026-09-17",
+    dateLabel: "17 September 2026",
+    readingMinutes: 9,
+    excerpt:
+      "The signature contained no files at all, yet Gmail counted five attachments. The cause was base64 image data, and the fix came down to deciding where the images actually live.",
+    tags: ["Email", "HTML email", "Gmail", "Debugging"],
+    blocks: [
+      {
+        type: "p",
+        text: "A message left my outbox with nothing attached to it, and Gmail still filed it under five attachments. The phone made it more obvious, which is what sent me looking. A signature should not be able to add attachments to a message.",
+      },
+
+      { type: "h2", text: "Five images, five attachments" },
+      {
+        type: "p",
+        text: "The signature is one table. Inside it there is a portrait and four small icons for the links, which comes to five images, and five is exactly the number Gmail was reporting. The count was never about files. It was about how those five images were being carried.",
+      },
+
+      { type: "h2", text: "Why base64 looked like a good idea" },
+      {
+        type: "p",
+        text: "Every image was pasted in as a `data:image/png;base64,` string. For a signature that is genuinely tempting. The whole thing lives in one blob of HTML, there is no second file to host, and nothing can 404 because nothing is being fetched from anywhere.",
+      },
+      {
+        type: "p",
+        text: "The costs turn up later, and there are three of them.",
+      },
+      {
+        type: "ul",
+        items: [
+          "Gmail does not render them. A data URI in a signature body is either stripped out or pulled into an attachment, which is what those five chips were.",
+          "They are about a third larger. Base64 maps three bytes onto four characters, so every image carries that overhead, and the string is copied into every message you send.",
+          "Nothing is cached. A hosted image is fetched once and reused across a thread. Embedded data is re-sent in full every single time.",
+        ],
+      },
+
+      { type: "h2", text: "The version that caused it" },
+      {
+        type: "code",
+        caption:
+          "One of the five, with the payload cut short. The other four were the same idea with different pixels.",
+        code: `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QA..." width="18" height="18" alt="" />`,
+      },
+      {
+        type: "code",
+        caption: "The same element, the same size. A URL where the pixels used to be.",
+        code: `<img src="https://anggakersana-dev.vercel.app/signature/gmail.png" width="18" height="18" border="0" alt=""
+     style="width:18px;height:18px;border:0;display:inline-block;vertical-align:-3px;margin-right:4px;" />`,
+      },
+
+      { type: "h2", text: "Where the images could live instead" },
+      {
+        type: "p",
+        text: "Once the images have to be fetched rather than embedded, the only real question left is who serves them. I went through the options.",
+      },
+      {
+        type: "ul",
+        items: [
+          "A path on my own machine. `src=\"/signature/photo.jpg\"` resolves against the recipient's computer, not mine, so it points at nothing.",
+          "Google Drive. The obvious candidate, since the files were already sitting there. I tested it rather than trusting what I remembered, and the numbers are below.",
+          "A general image host. This works, but the URL is rented. A host can rate limit it, rename it, or shut down, and by then the signature is sitting in mail you can no longer edit.",
+          "My own domain. Already paid for, already deployed, and the only option here where I control the path for as long as I keep the domain.",
+        ],
+      },
+
+      { type: "h2", text: "I tested the Drive URLs instead of repeating what I read" },
+      {
+        type: "p",
+        text: "The advice online says Drive direct links were killed in January 2024 and now return a 403. That is not what happened when I checked. I took one public file and asked for it three ways, once with a plain curl user agent and again with the user agent Gmail's image proxy sends.",
+      },
+      {
+        type: "code",
+        caption: "Three ways to ask Drive for the same image.",
+        code: `https://drive.google.com/uc?export=view&id=FILE_ID
+https://drive.google.com/thumbnail?id=FILE_ID&sz=w1000
+https://lh3.googleusercontent.com/d/FILE_ID`,
+      },
+      {
+        type: "ul",
+        items: [
+          "`uc?export=view` answered 200 and sent back a PDF. The first bytes of the body are `%PDF-1.5`, and the content type shifted with the user agent, `application/octet-stream` for curl and `application/pdf` for the proxy, across a byte count that never moved. An `img` tag cannot render a PDF, so this is the form that used to work and now quietly does not.",
+          "`thumbnail` works. It answered 200 with a real PNG of 785 KB, after redirecting to `lh3`.",
+          "`lh3` works and skips the redirect. It served a real PNG of 862 KB, and it accepts the sizing suffixes Google Photos uses, so `=w200` brought the same image down to 45 KB.",
+        ],
+      },
+      {
+        type: "p",
+        text: "So Drive is not dead. Drive works, through an endpoint that appears in no documentation, and that is the whole problem. The `/uc` form was undocumented too, and people leaned on it for years before it started returning PDFs with no announcement. Choosing `lh3` today means betting that Google keeps an undocumented path alive for as long as your old emails stay in other people's inboxes. There is a second exposure sitting underneath it: the image is a file in a Drive folder, so moving that file to the trash or having it flagged breaks the signature retroactively in every message you have already sent.",
+      },
+
+      { type: "h2", text: "What I ended up with" },
+      {
+        type: "p",
+        text: "The images are files in the site's public directory, served over HTTPS from the same domain as everything else. Nothing new to pay for, nothing new to keep alive, and a path I chose.",
+      },
+      {
+        type: "p",
+        text: "The trade is that the path is now a promise. Those five URLs are sitting in mail that has already been delivered and cannot be edited, so renaming or moving one of those files breaks the image in every message that used it. That is worth writing down next to the files, which is what I did.",
+      },
+
+      { type: "h2", text: "What the clients do to the markup anyway" },
+      {
+        type: "ul",
+        items: [
+          "Gmail does not fetch your image in front of the reader. It rewrites the URL and serves it through its own proxy, so your logs show Google rather than the person who opened the message.",
+          "Outlook ignores a fair amount of CSS, so `border=\"0\"` and `bgcolor` still earn their place as attributes rather than style declarations.",
+          "Some clients drop `border-radius`, so the circular crop of the portrait is baked into the pixels instead of being asked for in CSS.",
+          "There is no stylesheet. Everything is a table with inline styles, because that is the only vocabulary every client agrees on.",
+        ],
+      },
+      {
+        type: "compare",
+        before: {
+          src: "/blog/signature-wide.jpg",
+          alt: "The signature laid out in a 600 pixel column: the portrait sits beside the name, one line of four links, and the blog address on a single line.",
+        },
+        after: {
+          src: "/blog/signature-narrow.jpg",
+          alt: "The same signature in a 390 pixel column: the name wraps onto two lines, the four links reflow onto two rows, and the blog address wraps onto a second line.",
+        },
+        caption:
+          "The same signature in a 600 pixel column and a 390 pixel column. The renderer labels these two frames Before and After; here they mean wide and narrow.",
+      },
+
+      { type: "h2", text: "The half of the problem that is not in the HTML" },
+      {
+        type: "p",
+        text: "Fixing the HTML did not fix the phone, and this is the part I would have missed if I had stopped at the markup. The Gmail app keeps its own signature setting, separate from the one in Gmail on the web, and it accepts plain text only. The two do not sync. You can have a carefully built HTML signature in the browser and a completely different, much older one on the phone, and nothing anywhere tells you that.",
+      },
+      {
+        type: "p",
+        text: "So a signature is not one artifact. It is two, configured in two places, and the phone one cannot hold a single image. Set both deliberately.",
+      },
+
+      { type: "h2", text: "What I would tell someone starting this" },
+      {
+        type: "ul",
+        items: [
+          "Never embed the images. A `data:` URI does not survive Gmail, and it makes every message you send larger.",
+          "Host the images somewhere you control, and treat the URL as permanent.",
+          "Design for the narrowest column first. If the links reflow onto two rows and nothing overflows, the wide version takes care of itself.",
+          "Set the mobile signature too. It is plain text, and it is the one people forget.",
+          "Check the result in a client you do not control, because your own browser is the most forgiving place you will test it.",
+        ],
+      },
+      {
+        type: "p",
+        text: "A signature is a small piece of HTML that nobody looks at twice, which is exactly why it is worth getting right once. Mine now travels in every message I send, and it stopped announcing itself as five attachments the moment the images had somewhere real to live.",
+      },
+    ],
+  },
 ];
 
 export function getPost(slug: string): Post | undefined {

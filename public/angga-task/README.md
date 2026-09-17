@@ -89,6 +89,24 @@ Konten blog ada di **`src/data/posts.ts`** (bukan markdown, sengaja: biar tidak 
 - ⚠️ **Repo GitHub ini PUBLIC.** Karena itu semua bahan lamaran personal (email, cover letter, tracker, signature, no. HP, foto) **tidak di-commit/di-push** ke `main`. File di-gitignore (lihat `.gitignore`). Backup/akses dari mana saja pakai tempat privat (Drive pribadi / repo privat), bukan repo ini.
   - **Pengecualian sadar (2026-09-17): aset gambar signature.** `public/signature/` (1 foto + 4 ikon) **di-commit ke `main`** supaya bisa diambil penerima email lewat HTTPS. Signature HTML-nya sendiri tetap hanya di `apply`. Lihat `public/signature/README.md`.
 
+### Post blog: "One signature, five attachments" (2026-09-17)
+
+Post kedua di `/blog` (`email-signature-without-attachments`), Bahasa Inggris. Menceritakan cara membangun signature email yang efisien: gejala 5 attachment, kenapa base64 ditolak, opsi hosting gambar, hasil uji Google Drive, apa yang dilakukan client terhadap markup, dan bagian yang tidak ada di HTML sama sekali (Mobile Signature Gmail).
+
+- **Semua angka di post adalah hasil ukur, bukan kutipan artikel.** Satu file Drive publik diuji tiga bentuk URL dengan `curl`, masing-masing pada dua User-Agent (curl polos dan UA `GoogleImageProxy` yang dipakai Gmail saat mengambil gambar untuk penerima):
+
+  | Bentuk URL | Status | Content-Type | Magic bytes | Byte |
+  |---|---|---|---|---|
+  | `uc?export=view&id=` | 200 | `application/pdf` (proxy) / `application/octet-stream` (curl) | `%PDF-1.5` | 279.990 |
+  | `thumbnail?id=&sz=w1000` | 200 | `image/png` | `\x89PNG` | 785.447 |
+  | `lh3.googleusercontent.com/d/` | 200 | `image/png` | `\x89PNG` | 862.270 |
+  | `lh3.googleusercontent.com/d/=w200` | 200 | `image/png` | `\x89PNG` | 45.328 |
+
+- ⚠️ **Koreksi klaim yang beredar.** Nasihat umum (dan yang sempat aku sampaikan sebelum diukur) bilang link langsung Drive sekarang **403** sejak Januari 2024. Itu **tidak tereplikasi**. Yang benar-benar terjadi: `uc?export=view` mengembalikan **PDF**, jadi `<img>` tidak bisa merender. Content-type-nya bahkan berpindah menurut User-Agent pada jumlah byte yang identik. Karena itu post-nya tidak memakai klaim 403, dan kesimpulannya juga bukan "Drive mati" melainkan "Drive jalan lewat endpoint yang tidak terdokumentasi, dan itu justru masalahnya".
+- **Gambar** `public/blog/signature-wide.jpg` + `signature-narrow.jpg`, dirender sendiri dari HTML signature di container **600px** dan **390px**. Kanvas 720×450 CSS dengan `--force-device-scale-factor=2` supaya keluar 1440×900, yaitu rasio intrinsik yang dideklarasikan blok `compare` di `PostBody`. Dua jebakan yang kena: kartu versi sempit terpotong karena tingginya ditebak, dan koordinat crop manual meleset, jadi akhirnya batas kartu ditentukan lewat **trim otomatis** terhadap latar putih.
+- Blok `compare` di `PostBody` memberi label **"Before"/"After" secara hardcoded**. Di sini isinya dua lebar, bukan sebelum/sesudah, jadi caption-nya menyatakan itu terus terang.
+- **Verifikasi:** build lulus, 0 em dash, tidak ada overflow di 1440/390/320, 20 chip kode tanpa backtick bocor, gambar termuat (`complete=true`) dengan rasio 1,603 sehingga tidak penyok, dan post otomatis jadi teratas di `/blog` sekaligus "Latest writing" di Hero tanpa wiring tambahan.
+
 ### Perbaikan Signature Gmail: Base64 → HTTPS (2026-09-17)
 - **Masalah:** signature menampilkan **"5 Attachments"** di Gmail, terutama di mobile. Penyebabnya 5 gambar ditulis sebagai `data:image/...;base64` di dalam HTML; Gmail mengubah data URI di body compose menjadi **inline attachment**.
 - **Solusi:** kelima gambar diekstrak ke `public/signature/` dan di-commit ke `main` (ter-deploy di `anggakersana-dev.vercel.app`), lalu semua `src` di HTML signature diganti URL HTTPS. Desain tidak berubah: foto tetap bulat 84×84, keempat ikon tetap 18×18 dan tetap clickable.
