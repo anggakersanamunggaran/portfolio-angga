@@ -239,7 +239,7 @@ getComputedStyle(h1).fontSize  // did clamp() resolve as intended?`,
     accent: "five attachments",
     date: "2026-09-17",
     dateLabel: "17 September 2026",
-    readingMinutes: 9,
+    readingMinutes: 13,
     excerpt:
       "The signature contained no files at all, yet Gmail counted five attachments. The cause was base64 image data, and the fix came down to deciding where the images actually live.",
     tags: ["Email", "HTML email", "Gmail", "Debugging"],
@@ -359,6 +359,62 @@ https://lh3.googleusercontent.com/d/FILE_ID`,
         },
         caption:
           "The same signature in a 600 pixel column and a 390 pixel column. The renderer labels these two frames Before and After; here they mean wide and narrow.",
+      },
+
+      { type: "h2", text: "The counting pixel, and how much it can tell you" },
+      {
+        type: "p",
+        text: "Once the images live on a domain you control, the next idea arrives on its own. Put a tiny image in the signature pointing at an endpoint you own, count the requests, and every fetch is someone opening your email. This one works, and I have shipped it. In a sending system I worked on, every outgoing email carried a pixel aimed at an endpoint that recorded the first open and ignored every one after it.",
+      },
+      {
+        type: "code",
+        caption:
+          "The pixel itself is the boring part. What matters is the per-recipient code in the path.",
+        code: `<img src="https://example.com/api/open/RECIPIENT_CODE/pixel.gif"
+     width="1" height="1" alt="" border="0" />`,
+      },
+      {
+        type: "code",
+        caption:
+          "The shape of the handler, in whatever framework you like. Record the first open, ignore the rest, then hand back a GIF nobody is allowed to keep.",
+        code: `export async function GET(request, { params }) {
+  const { code } = await params;
+
+  // No-op when this recipient already has a timestamp.
+  await recordFirstOpen(code);
+
+  return new Response(PIXEL, {
+    headers: {
+      "Content-Type": "image/gif",
+      "Cache-Control": "no-store, no-cache, must-revalidate",
+    },
+  });
+}`,
+      },
+      {
+        type: "p",
+        text: "Two details are doing the work there. The code in the URL identifies the recipient, so the count tells you who opened rather than only how many. And the write is guarded, so a second fetch for the same recipient does not inflate the number.",
+      },
+      {
+        type: "p",
+        text: "A signature can have the second of those and not the first. It is one blob of HTML pasted into one settings box, so the pixel URL is identical in every message you send. There is no per-recipient code to put in the path, which means no attribution. What you get is a running total across every email you have ever sent, and no way to tell which message moved it.",
+      },
+      {
+        type: "p",
+        text: "The other half of the problem is what a fetch actually means.",
+      },
+      {
+        type: "ul",
+        items: [
+          "Gmail does not let the reader's device fetch your image. It fetches the URL itself through a proxy on `googleusercontent.com`, caches it, and serves the reader the cached copy. The request that reaches you is Google's, carrying the `GoogleImageProxy` user agent, which is the same agent I used to test the Drive URLs earlier in this post. It can arrive at delivery time rather than reading time.",
+          "Apple goes further. Mail Privacy Protection, on by default since iOS 15 in 2021, pulls every remote image through Apple's servers whether or not the message is ever opened, and it applies to any account read in the Apple Mail app rather than only to Apple addresses. By 2025 Apple was being reported at more than half of all opens recorded across the industry, which is a long way of saying that a large share of the opens everyone counts never involved a person.",
+          "Caching pulls the number down in the other direction. A repeat view is often served from a cache, so it never reaches the endpoint at all. That is part of why the first-open guard above is cheap: most of the duplicates were never going to arrive anyway.",
+          "And images are blocked by default in plenty of clients until the reader asks for them, so a genuine read can produce nothing.",
+        ],
+      },
+      {
+        type: "p",
+        text: "So the honest conclusion is not that the endpoint fails. It counts fetches, and a fetch is not always a read. In a sending system, where the per-recipient code lets you attribute each one and the first-open guard keeps it from drifting, that is still a useful directional signal, which is why it earns its place in production. In a signature, where you also lose the attribution, what is left is a number that goes up. It is also worth a look before you ship one, since European privacy rules treat a tracking pixel as a different thing from the email carrying it.",
       },
 
       { type: "h2", text: "The half of the problem that is not in the HTML" },
